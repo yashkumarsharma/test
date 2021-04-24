@@ -25,7 +25,7 @@ const App = () => {
 
       <Stack.Navigator>
         <Stack.Screen
-          name="Home"
+          name='Home'
           component={HomeScreen}
           options={{
             title: 'Home',

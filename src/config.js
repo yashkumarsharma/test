@@ -1,1 +1,1 @@
-export const apiHost = 'https://api.outlier.org';
+export const apiHost = 'https://api.outlier.org'

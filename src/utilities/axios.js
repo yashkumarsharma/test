@@ -1,7 +1,7 @@
-import axios from 'axios';
+import axios from 'axios'
 
-import { apiHost } from '../config';
+import { apiHost } from '../config'
 
-const axiosInstance = axios.create({
+export const axiosInstance = axios.create({
   baseURL: apiHost,
-});
+})

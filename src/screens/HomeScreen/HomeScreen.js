@@ -1,8 +1,9 @@
-import { Text, View, Platform } from 'react-native';
-import colors from '../../assets/colors';
-import React from 'react';
+import React from 'react'
+import { Text, View, Platform } from 'react-native'
 
-function HomeScreen() {
+import colors from '../../assets/colors'
+
+function HomeScreen () {
   return (
     <View
       style={{
@@ -19,7 +20,7 @@ function HomeScreen() {
         Home Screen
       </Text>
     </View>
-  );
+  )
 }
 
-export default HomeScreen;
+export default HomeScreen
