@@ -1,9 +1,11 @@
 import React from 'react'
 import { Text, View, Platform } from 'react-native'
+import Config from 'react-native-config'
 
 import colors from '../../assets/colors'
 
 function HomeScreen () {
+  console.warn('api host is', Config.API_HOST)
   return (
     <View
       style={{

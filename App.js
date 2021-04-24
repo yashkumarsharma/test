@@ -1,21 +1,22 @@
-import React, { useEffect } from 'react';
-import { SafeAreaView, StatusBar } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
-import SplashScreen from 'react-native-splash-screen';
-import { createStackNavigator } from '@react-navigation/stack';
-import colors from './src/assets/colors';
-import HomeScreen from './src/screens/HomeScreen/HomeScreen';
+import React, { useEffect } from 'react'
+import { SafeAreaView, StatusBar } from 'react-native'
+import { NavigationContainer } from '@react-navigation/native'
+import SplashScreen from 'react-native-splash-screen'
+import { createStackNavigator } from '@react-navigation/stack'
+
+import colors from './src/assets/colors'
+import HomeScreen from './src/screens/HomeScreen/HomeScreen'
 
 const App = () => {
   useEffect(() => {
-    SplashScreen.hide();
-  }, []);
+    SplashScreen.hide()
+  }, [])
 
   const backgroundStyle = {
     backgroundColor: colors.bg,
-  };
+  }
 
-  const Stack = createStackNavigator();
+  const Stack = createStackNavigator()
 
   return (
     <NavigationContainer>
@@ -34,7 +35,7 @@ const App = () => {
         />
       </Stack.Navigator>
     </NavigationContainer>
-  );
-};
+  )
+}
 
-export default App;
+export default App
