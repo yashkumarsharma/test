@@ -1,5 +1,5 @@
 import React from 'react'
-import { Text, View, Platform } from 'react-native'
+import { Text, Platform, View } from 'react-native'
 import Config from 'react-native-config'
 
 import colors from '../../assets/colors'
@@ -12,7 +12,7 @@ function HomeScreen () {
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: colors.bg,
+        backgroundColor: '#292929',
       }}>
       <Text
         style={{

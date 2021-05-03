@@ -3,9 +3,8 @@ import { SafeAreaView, StatusBar } from 'react-native'
 import { NavigationContainer } from '@react-navigation/native'
 import SplashScreen from 'react-native-splash-screen'
 import { createStackNavigator } from '@react-navigation/stack'
-
-import colors from './src/assets/colors'
 import HomeScreen from './src/screens/HomeScreen/HomeScreen'
+import HeaderComponent from './src/components/HeaderComponent/HeaderComponent'
 
 const App = () => {
   useEffect(() => {
@@ -13,7 +12,7 @@ const App = () => {
   }, [])
 
   const backgroundStyle = {
-    backgroundColor: colors.bg,
+    backgroundColor: '#000',
   }
 
   const Stack = createStackNavigator()
@@ -21,7 +20,7 @@ const App = () => {
   return (
     <NavigationContainer>
       <SafeAreaView style={backgroundStyle}>
-        <StatusBar barStyle={'dark-content'} />
+        <StatusBar barStyle={'dark-content'} backgroundColor={'black'}/>
       </SafeAreaView>
 
       <Stack.Navigator>
@@ -29,8 +28,7 @@ const App = () => {
           name='Home'
           component={HomeScreen}
           options={{
-            title: 'Home',
-            headerShown: false,
+            header: (props) => <HeaderComponent {...props} />,
           }}
         />
       </Stack.Navigator>
