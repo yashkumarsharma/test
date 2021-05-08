@@ -1,5 +1,6 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Button, Text, TextInput, View } from 'react-native'
+import AsyncStorage from '@react-native-community/async-storage'
 
 import { AppContext } from '../../components/ContextProvider/ContextProvider'
 import { login } from '../../utilities/api'
@@ -11,12 +12,29 @@ const LoginScreen = props => {
   const context = useContext(AppContext)
   const { updateContext } = context
 
+  useEffect(() => {
+    loadUser()
+  }, [])
+
+  const loadUser = async () => {
+    try {
+      const storedUser = await AsyncStorage.getItem('user')
+      if (storedUser) {
+        const user = JSON.parse(storedUser)
+        updateContext({ user })
+      }
+    } catch (err) {
+      console.warn('Error while fetching user from Asycnstorage')
+    }
+  }
+
   const submit = async () => {
     const data = await login(username, password)
     const user = {
       username,
       ...data,
     }
+    await AsyncStorage.setItem('user', JSON.stringify(user))
     updateContext({ user })
   }
 
