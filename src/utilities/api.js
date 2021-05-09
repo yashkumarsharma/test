@@ -11,10 +11,13 @@ export const login = async (username, password) => {
       realm: 'Username-Password-Authentication',
     }
 
-    const { data } = await axios.post(`https://${Config.AUTH0_DOMAIN}/oauth/token`, queryData)
+    const { data } = await axios.post(
+      `https://${Config.AUTH0_DOMAIN}/oauth/token`,
+      queryData,
+    )
     console.log(data)
     return data
   } catch (e) {
-    console.log(e.response.data)
+    return e.response?.data
   }
 }
