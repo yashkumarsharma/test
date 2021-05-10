@@ -1,12 +1,22 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Text, Platform, StyleSheet, Animated, TouchableOpacity, Image, View } from 'react-native'
+import {
+  Text,
+  StyleSheet,
+  Animated,
+  TouchableOpacity,
+  Image,
+  View,
+} from 'react-native'
 import colors from '../../assets/colors'
 import Caret from '../../assets/icons/Caret.png'
 import { latoFont } from '../../utilities/utilsFunctions'
 
 function HeaderComponent ({ scene, previous, navigation: { goBack } }) {
-  const progress = Animated.add(scene.progress.current, scene.progress.next || 0)
+  const progress = Animated.add(
+    scene.progress.current,
+    scene.progress.next || 0,
+  )
 
   const opacity = progress.interpolate({
     inputRange: [0, 1, 2],
@@ -14,22 +24,22 @@ function HeaderComponent ({ scene, previous, navigation: { goBack } }) {
   })
 
   return (
-    <Animated.View
-      style={{ ...styles.container, opacity }}>
-      <View
-        style={styles.titleContainer}>
+    <Animated.View style={{ ...styles.container, opacity }}>
+      <View style={styles.titleContainer}>
         {previous
-          ? <TouchableOpacity onPress={goBack} style={styles.PreviousContainer}>
-            <Image source={Caret} style={styles.PreviousIcon}/>
-              <Text style={styles.PreviousText}>{previous?.route?.name}</Text>
-            </TouchableOpacity>
-          : <Text style={styles.titleText}>{scene?.route?.name}</Text>
-        }
-
+          ? (
+          <TouchableOpacity onPress={goBack} style={styles.PreviousContainer}>
+            <Image source={Caret} style={styles.PreviousIcon} />
+            <Text style={styles.PreviousText}>{previous?.route?.name}</Text>
+          </TouchableOpacity>
+            )
+          : (
+          <Text style={styles.titleText}>{scene?.route?.name}</Text>
+            )}
       </View>
     </Animated.View>
   )
-};
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -48,7 +58,12 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
   },
   titleText: { color: 'white', fontFamily: latoFont('Bold'), fontSize: 14 },
-  PreviousText: { color: colors.brand, fontFamily: latoFont('Bold'), fontSize: 14, textTransform: 'uppercase' },
+  PreviousText: {
+    color: colors.brand,
+    fontFamily: latoFont('Bold'),
+    fontSize: 14,
+    textTransform: 'uppercase',
+  },
   PreviousContainer: { flexDirection: 'row', alignItems: 'center' },
   PreviousIcon: { height: 12, width: 6, marginRight: 12 },
 })

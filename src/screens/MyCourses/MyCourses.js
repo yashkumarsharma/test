@@ -1,9 +1,8 @@
 import React, { useEffect } from 'react'
-import { View } from 'react-native'
 import SplashScreen from 'react-native-splash-screen'
 import { createStackNavigator } from '@react-navigation/stack'
 import HeaderComponent from '../../components/HeaderComponent/HeaderComponent'
-import colors from '../../assets/colors'
+import MyCoursesScreen from './MyCoursesScreen'
 
 const MyCourses = () => {
   useEffect(() => {
@@ -16,7 +15,7 @@ const MyCourses = () => {
         <Stack.Navigator>
           <Stack.Screen
             name='My Courses'
-            component={() => <View style={{ flex: 1, backgroundColor: colors.bg }}/>}
+            component={MyCoursesScreen}
             options={{
               header: HeaderComponent,
             }}

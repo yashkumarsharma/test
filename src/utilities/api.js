@@ -1,5 +1,6 @@
 import axios from 'axios'
 import Config from 'react-native-config'
+import { getApi } from '../utilities/axios'
 
 export const login = async (username, password) => {
   try {
@@ -19,5 +20,14 @@ export const login = async (username, password) => {
     return data
   } catch (e) {
     return e.response?.data
+  }
+}
+
+export async function getStudentCourses () {
+  try {
+    const { data } = await getApi('/student/courses')
+    return data
+  } catch (e) {
+    console.log(e.response.data)
   }
 }
