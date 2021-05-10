@@ -25,3 +25,7 @@ export async function getApi (url) {
     params: { uniqid: Date.now() },
   })
 }
+
+export function getUrl (courseUUID, sectionUUID = courseUUID) {
+  return `/dato/files/${courseUUID}/${sectionUUID}`
+}

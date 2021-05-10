@@ -1,5 +1,5 @@
 import React from 'react'
-import { Image, Platform, View } from 'react-native'
+import { Image, View } from 'react-native'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import colors from '../../assets/colors'
 import MyCoursesInactive from '../../assets/icons/MyCoursesInactive.png'

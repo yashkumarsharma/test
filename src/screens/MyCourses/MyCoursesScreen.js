@@ -15,8 +15,9 @@ import LinearGradient from 'react-native-linear-gradient'
 import { latoFont } from '../../utilities/utilsFunctions'
 import { getCourseImage } from '../../config'
 import { AppContext } from '../../components/ContextProvider/ContextProvider'
+import PropTypes from 'prop-types'
 
-const MyCoursesScreen = () => {
+const MyCoursesScreen = ({ navigation: { navigate } }) => {
   const [courses, setCourses] = useState(null)
 
   const context = useContext(AppContext)
@@ -43,18 +44,26 @@ const MyCoursesScreen = () => {
         <View style={styles.container}>
           {courses.map(course => {
             return (
-              <ImageBackground
-                source={getCourseImage(course?.id)}
+              <TouchableOpacity
                 style={styles.cardContainer}
-                imageStyle={{ width: '100%' }}>
-                <LinearGradient
-                  colors={['#000000', 'transparent']}
-                  end={{ x: 0, y: 0.65 }}
-                  start={{ x: 0, y: 1 }}
-                  style={styles.gradient}>
-                  <Text style={styles.courseName}>{course?.name}</Text>
-                </LinearGradient>
-              </ImageBackground>
+                onPress={() => {
+                  navigate('course', {
+                    courseUUID: course?.id,
+                    courseName: course?.name,
+                  })
+                }}>
+                <ImageBackground
+                  source={getCourseImage(course?.id)}
+                  style={{ width: '100%' }}>
+                  <LinearGradient
+                    colors={['#000000', 'transparent']}
+                    end={{ x: 0, y: 0.65 }}
+                    start={{ x: 0, y: 1 }}
+                    style={styles.gradient}>
+                    <Text style={styles.courseName}>{course?.name}</Text>
+                  </LinearGradient>
+                </ImageBackground>
+              </TouchableOpacity>
             )
           })}
           <View style={styles.dashboardCard}>
@@ -125,5 +134,9 @@ const styles = StyleSheet.create({
   },
   courseName: { color: '#FFF', fontFamily: latoFont('Bold'), fontSize: 16 },
 })
+
+MyCoursesScreen.propTypes = {
+  navigation: PropTypes.objectOf(PropTypes.func),
+}
 
 export default MyCoursesScreen
