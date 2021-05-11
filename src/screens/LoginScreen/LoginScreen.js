@@ -3,6 +3,7 @@ import {
   Image,
   Keyboard,
   Linking,
+  Platform,
   Pressable,
   StyleSheet,
   Text,
@@ -100,7 +101,11 @@ const LoginScreen = () => {
           placeholder="Password"
           onChangeText={setPassword}
           placeholderTextColor="white"
-          secureTextEntry={password.length > 0 && !passwordVisible}
+          secureTextEntry={
+            Platform.OS === 'android'
+              ? password.length > 0 && !passwordVisible
+              : !passwordVisible
+          }
           defaultValue={password}
         />
         {renderEye()}
