@@ -16,7 +16,6 @@ export const login = async (username, password) => {
       `https://${Config.AUTH0_DOMAIN}/oauth/token`,
       queryData,
     )
-    console.log(data)
     return data
   } catch (e) {
     return e.response?.data

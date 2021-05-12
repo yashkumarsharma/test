@@ -12,7 +12,7 @@ import {
 import { getStudentCourses } from '../../utilities/api'
 import colors from '../../assets/colors'
 import LinearGradient from 'react-native-linear-gradient'
-import { latoFont } from '../../utilities/utilsFunctions'
+import { getCohortModifier, latoFont } from '../../utilities/utilsFunctions'
 import { getCourseImage } from '../../config'
 import { AppContext } from '../../components/ContextProvider/ContextProvider'
 import PropTypes from 'prop-types'
@@ -48,8 +48,7 @@ const MyCoursesScreen = ({ navigation: { navigate } }) => {
                 style={styles.cardContainer}
                 onPress={() => {
                   navigate('course', {
-                    courseUUID: course?.id,
-                    courseName: course?.name,
+                    course,
                   })
                 }}>
                 <ImageBackground
