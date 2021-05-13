@@ -41,4 +41,4 @@
 ### Compatibility issues with Apple M1 chip
 
 #### Running on Android emulator
- - use the Canary build of Android Studio which has support for Android virtual device.
+ - use the [Canary build of Android Studio](https://developer.android.com/studio/preview) which has arm64 support for Android virtual device.
