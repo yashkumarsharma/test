@@ -26,6 +26,11 @@ import {
   getCohortSpecialDays,
   getCohortStartSecondsSinceEpoch,
 } from '../../utilities/courseUtils'
+import ModalComponent from '../../components/ModalComponent/ModalComponent'
+import CheckBox from 'react-native-check-box'
+import { useSelect } from '../../hooks/useSelect'
+import ResourceHeader from '../../components/ResourceHeader/ResourceHeader'
+import ResourceFooter from '../../components/ResourceFooter/ResourceFooter'
 
 const CourseScreen = ({ route }) => {
   const {
@@ -34,6 +39,10 @@ const CourseScreen = ({ route }) => {
   } = route.params
   const [chapters, setChapter] = useState(null)
   const [cohortData, setCohortData] = useState(null)
+  const [modalVisible, setModalVisible] = useState(false)
+  const [selectMode, setSelectMode] = useState('')
+  const { selectedOptions, reset, add, remove, isSelected } = useSelect([])
+
   const getCourseChapters = async () => {
     const { chapters } = await getCourseData(courseUUID)
 
@@ -41,49 +50,74 @@ const CourseScreen = ({ route }) => {
     const cohortModifier = getCohortModifier(chapters, cohortDuration)
     const cohortSpecialDays = getCohortSpecialDays(course)
     const cohortStartDate = getCohortStartSecondsSinceEpoch(course)
-
     const cohortData = {
       cohortModifier,
       cohortSpecialDays,
       cohortStartDate,
     }
     setCohortData(cohortData)
-    setChapter(chapters)
+    setChapter(chapters.filter(chap => chap?.type === 'chapter'))
   }
+
+  const isAllSelected = chapters?.length === selectedOptions.length
 
   useEffect(() => {
     getCourseChapters()
   }, [])
 
+  const checkboxPress = () => {
+    if (isAllSelected) reset()
+    else add(chapters?.map(({ chapter_uuid: chapterUUID }) => chapterUUID))
+  }
+
+  const headerButtonPress = () => {
+    if (selectMode) {
+      reset()
+      setSelectMode(null)
+    } else setModalVisible(true)
+  }
+
   const currentDate = secondsSinceEpoch()
   return (
-    <ScrollView
-      style={styles.scrollContainer}
-      contentContainerStyle={styles.scrollContent}>
-      {!chapters
-        ? (
-        <View style={{ justifyContent: 'center', flexGrow: 1 }}>
-          <ActivityIndicator />
-        </View>
-          )
-        : (
-        <View style={styles.container}>
-          <View style={styles.headerContainer}>
-            <Text style={styles.courseTitle}>{courseName}</Text>
-            <Text style={styles.selectButton}>SELECT</Text>
+    <>
+      <ScrollView
+        style={styles.scrollContainer}
+        contentContainerStyle={styles.scrollContent}>
+        <ModalComponent
+          modalVisible={modalVisible}
+          setModalVisible={setModalVisible}
+          setSelectMode={setSelectMode}
+        />
+        {!chapters
+          ? (
+          <View style={{ justifyContent: 'center', flexGrow: 1 }}>
+            <ActivityIndicator size="large" color={colors.brand} />
           </View>
-          {chapters
-            .filter(chap => chap?.type === 'chapter')
-            .map((chapter, index) => {
+            )
+          : (
+          <View style={styles.container}>
+            <ResourceHeader
+              selectMode={selectMode}
+              isAllSelected={isAllSelected}
+              title={courseName}
+              onPress={headerButtonPress}
+              checkboxPress={checkboxPress}
+            />
+            {chapters.map((chapter, index) => {
               const { unlockDate } = getChapterLockDates({
                 chapter,
                 cohortData,
               })
               const isLocked = unlockDate > currentDate
+              const { chapter_uuid: chapterUUID } = chapter
+
+              const selected = isSelected(chapterUUID)
               return (
-                <TouchableOpacity style={styles.chapterCard}>
-                  <View style={{ paddingRight: 12 }}>
-                    <Text style={isLocked ? styles.lockTitle : styles.title}>
+                <TouchableOpacity style={styles.chapterCard} key={chapterUUID}>
+                  <View style={{ paddingRight: 12, flex: 1 }}>
+                    <Text
+                      style={isLocked ? styles.lockTitle : styles.title}
+                      numberOfLines={2}>
                       Chapter {index + 1}: {chapter?.title}
                     </Text>
                     <View style={styles.downloadContainer}>
@@ -96,16 +130,33 @@ const CourseScreen = ({ route }) => {
                       )}
                     </View>
                   </View>
-                  <Image
-                    source={isLocked ? Lock : Vector}
-                    style={isLocked ? styles.lockIcon : styles.icon}
-                  />
+                  {selectMode
+                    ? (
+                    <CheckBox
+                      onClick={() => {
+                        selected ? remove(chapterUUID) : add(chapterUUID)
+                      }}
+                      isChecked={selected}
+                      checkBoxColor={colors.brand}
+                    />
+                      )
+                    : (
+                    <Image
+                      source={isLocked ? Lock : Vector}
+                      style={isLocked ? styles.lockIcon : styles.icon}
+                    />
+                      )}
                 </TouchableOpacity>
               )
             })}
-        </View>
-          )}
-    </ScrollView>
+          </View>
+            )}
+      </ScrollView>
+      <ResourceFooter
+        selectMode={selectMode}
+        selectedOptions={selectedOptions}
+      />
+    </>
   )
 }
 
@@ -122,21 +173,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-  },
-  headerContainer: {
-    flexDirection: 'row',
-    paddingBottom: 24,
-    marginBottom: 24,
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    borderBottomColor: 'rgba(255, 255, 255, 0.1)',
-    borderBottomWidth: 1,
-  },
-  courseTitle: { fontFamily: latoFont('Bold'), fontSize: 14, color: '#B1BFC5' },
-  selectButton: {
-    fontFamily: latoFont('Bold'),
-    fontSize: 14,
-    color: colors.brand,
   },
   title: { fontFamily: latoFont('Bold'), fontSize: 16, color: '#FFFFFF' },
   lockTitle: { fontFamily: latoFont('Bold'), fontSize: 16, color: '#B1BFC5' },

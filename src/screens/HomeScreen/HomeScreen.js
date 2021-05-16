@@ -26,6 +26,7 @@ function HomeScreen () {
           borderWidth: 0.5,
           backgroundColor: '#000000',
           borderTopColor: '#000',
+          borderBottomColor: '#000',
         },
         style: { borderTopColor: '#000' },
         activeTintColor: '#FFF',
