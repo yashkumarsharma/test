@@ -1,3 +1,5 @@
+/* eslint-disable react/display-name */
+/* eslint-disable react/prop-types */
 import React from 'react'
 import { Image, View } from 'react-native'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
@@ -11,6 +13,8 @@ import OptionsInactive from '../../assets/icons/PersonInactive.png'
 import MathActive from '../../assets/icons/PencilInactive.png'
 import MyCourses from '../MyCourses/MyCourses'
 import { latoFont } from '../../utilities/utilsFunctions'
+import OptionsScreen from '../OptionsScreen'
+import HeaderComponent from '../../components/HeaderComponent/HeaderComponent'
 
 const Tab = createBottomTabNavigator()
 const IconStyle = { height: 24, width: 24 }
@@ -19,7 +23,7 @@ function HomeScreen () {
   // console.warn('api host is', Config.API_HOST)
   return (
     <Tab.Navigator
-      initialRouteName='Courses'
+      initialRouteName="Courses"
       tabBarOptions={{
         tabStyle: {
           borderColor: '#292929',
@@ -39,7 +43,7 @@ function HomeScreen () {
         },
       }}>
       <Tab.Screen
-        name='Courses'
+        name="Courses"
         component={MyCourses}
         options={{
           tabBarLabel: 'My Courses',
@@ -52,7 +56,7 @@ function HomeScreen () {
         }}
       />
       <Tab.Screen
-        name='Downloads'
+        name="Downloads"
         component={() => <View />}
         options={{
           tabBarLabel: 'Downloads',
@@ -65,8 +69,10 @@ function HomeScreen () {
         }}
       />
       <Tab.Screen
-        name='Math'
-        component={() => <View style={{ flex: 1, height: 1000, backgroundColor: colors.bg }}/>}
+        name="Math"
+        component={() => (
+          <View style={{ flex: 1, height: 1000, backgroundColor: colors.bg }} />
+        )}
         options={{
           tabBarLabel: 'Math entry',
           tabBarIcon: () => <Image style={IconStyle} source={MathActive} />,
@@ -74,9 +80,10 @@ function HomeScreen () {
         }}
       />
       <Tab.Screen
-        name='Options'
-        component={() => <View />}
+        name="Options"
+        component={OptionsScreen}
         options={{
+          header: HeaderComponent,
           tabBarLabel: 'Options',
           tabBarIcon: ({ focused }) => (
             <Image

@@ -27,6 +27,7 @@ const MyCoursesScreen = ({ navigation: { navigate } }) => {
     setCourses(courses)
   }
   useEffect(() => {
+    if (!isLogin) return
     getCourses()
   }, [isLogin])
 
@@ -42,9 +43,10 @@ const MyCoursesScreen = ({ navigation: { navigate } }) => {
           )
         : (
         <View style={styles.container}>
-          {courses.map(course => {
+          {courses.map((course, key) => {
             return (
               <TouchableOpacity
+                key={key}
                 style={styles.cardContainer}
                 onPress={() => {
                   navigate('course', {
