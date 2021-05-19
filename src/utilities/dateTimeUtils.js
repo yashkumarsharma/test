@@ -8,6 +8,7 @@ export {
   diffDays,
   addDaysToDate,
   calculateLockDate,
+  getVideoDurationString,
 }
 // Returns the current date/time in seconds.
 // Does not need tests because that would require mocking Date.now and is not
@@ -151,4 +152,17 @@ function calculateUnlockDate (unlockAfterDays, cohortStartDate) {
   const unlockDatePST = changeTimezone(unlockDateUTC, 'America/Los_Angeles')
 
   return unlockDatePST
+}
+
+function getVideoDurationString (duration) {
+  const durationArray = duration.split(':')
+  if (durationArray.length === 2) {
+    return Math.round(Number(duration.replace(':', '.'))) + ' Mins'
+  } else {
+    return (
+      durationArray[0] +
+      ' Hour ' +
+      getVideoDurationString(durationArray.slice(1, 3).join(':'))
+    )
+  }
 }

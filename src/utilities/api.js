@@ -31,6 +31,12 @@ export async function getStudentCourses () {
   }
 }
 
+export async function loadSectionData (activeCourseUUID, uuid) {
+  const url = getUrl(activeCourseUUID, uuid)
+  const { data } = await getApi(url)
+  return data
+}
+
 export async function getCourseData (courseUuid) {
   const url = getUrl(courseUuid)
   const { data } = await getApi(url)

@@ -49,7 +49,7 @@ const MyCoursesScreen = ({ navigation: { navigate } }) => {
                 key={key}
                 style={styles.cardContainer}
                 onPress={() => {
-                  navigate('course', {
+                  navigate('chapters', {
                     course,
                   })
                 }}>

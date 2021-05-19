@@ -4,6 +4,7 @@ import { createStackNavigator } from '@react-navigation/stack'
 import HeaderComponent from '../../components/HeaderComponent/HeaderComponent'
 import MyCoursesScreen from './MyCoursesScreen'
 import CourseScreen from './CourseScreen'
+import ChapterScreen from './ChapterScreen'
 
 const MyCourses = () => {
   useEffect(() => {
@@ -15,15 +16,23 @@ const MyCourses = () => {
   return (
     <Stack.Navigator>
       <Stack.Screen
-            name='My Courses'
-            component={MyCoursesScreen}
-            options={{
-              header: HeaderComponent,
-            }}
-          />
+        name='My Courses'
+        component={MyCoursesScreen}
+        options={{
+          header: HeaderComponent,
+        }}
+      />
+
       <Stack.Screen
-        name="course"
+        name='chapters'
         component={CourseScreen}
+        options={{
+          header: HeaderComponent,
+        }}
+      />
+      <Stack.Screen
+        name='chapter'
+        component={ChapterScreen}
         options={{
           header: HeaderComponent,
         }}

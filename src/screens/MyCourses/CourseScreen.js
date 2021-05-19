@@ -32,11 +32,12 @@ import { useSelect } from '../../hooks/useSelect'
 import ResourceHeader from '../../components/ResourceHeader/ResourceHeader'
 import ResourceFooter from '../../components/ResourceFooter/ResourceFooter'
 
-const CourseScreen = ({ route }) => {
+const CourseScreen = ({ route, navigation: { navigate } }) => {
   const {
     course: { id: courseUUID, name: courseName },
     course,
   } = route.params
+
   const [chapters, setChapter] = useState(null)
   const [cohortData, setCohortData] = useState(null)
   const [modalVisible, setModalVisible] = useState(false)
@@ -78,6 +79,7 @@ const CourseScreen = ({ route }) => {
   }
 
   const currentDate = secondsSinceEpoch()
+
   return (
     <>
       <ScrollView
@@ -112,8 +114,22 @@ const CourseScreen = ({ route }) => {
               const { chapter_uuid: chapterUUID } = chapter
 
               const selected = isSelected(chapterUUID)
+
               return (
-                <TouchableOpacity style={styles.chapterCard} key={chapterUUID}>
+                <TouchableOpacity
+                  style={styles.chapterCard}
+                  key={chapterUUID}
+                  onPress={() => {
+                    if (!selectMode) {
+                      navigate('chapter', {
+                        course,
+                        chapter,
+                        index,
+                      })
+                    } else {
+                      selected ? remove(chapterUUID) : add(chapterUUID)
+                    }
+                  }}>
                   <View style={{ paddingRight: 12, flex: 1 }}>
                     <Text
                       style={isLocked ? styles.lockTitle : styles.title}
