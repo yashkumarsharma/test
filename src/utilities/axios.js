@@ -18,7 +18,7 @@ const getToken = async () => {
   }
 }
 
-export async function getApi(url) {
+export async function getApi (url) {
   const token = await getToken()
   return axiosInstance.get(url, {
     headers: { Authorization: `Bearer ${token}` },
@@ -26,6 +26,14 @@ export async function getApi(url) {
   })
 }
 
-export function getUrl(courseUUID, sectionUUID = courseUUID) {
+export async function postApi (url, data) {
+  const token = await getToken()
+  return axiosInstance.post(url, data, {
+    headers: { Authorization: `Bearer ${token}` },
+    params: { uniqid: Date.now() },
+  })
+}
+
+export function getUrl (courseUUID, sectionUUID = courseUUID) {
   return `/dato/files/${courseUUID}/${sectionUUID}`
 }

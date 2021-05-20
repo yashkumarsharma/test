@@ -48,3 +48,6 @@
 
 ### Helpful commands
 - On iOS, if you are facing issue related to pods try this command `cd ios && pod deintegrate && pod install`
+
+### Math tab or Myscript Integration
+- To test this tab use [this url](https://deploy-preview-3911--outlier-calculus.netlify.app/#/662b74aa-d69c-4754-8ccf-8ed250a3a6d9/2d9aca40-e507-4f81-bd6a-edd6e9824da7) on desktop

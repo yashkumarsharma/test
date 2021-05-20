@@ -14,6 +14,7 @@ import MathActive from '../../assets/icons/PencilInactive.png'
 import MyCourses from '../MyCourses/MyCourses'
 import { latoFont, showMathTab } from '../../utilities/utilsFunctions'
 import OptionsScreen from '../OptionsScreen'
+import MathScreen from '../MathsScreen'
 import HeaderComponent from '../../components/HeaderComponent/HeaderComponent'
 import { AppContext } from '../../components/ContextProvider/ContextProvider'
 
@@ -72,9 +73,7 @@ function HomeScreen () {
       />
       {showMath && <Tab.Screen
         name="Math"
-        component={() => (
-          <View style={{ flex: 1, height: 1000, backgroundColor: colors.bg }} />
-        )}
+        component={MathScreen}
         options={{
           tabBarLabel: 'Math entry',
           tabBarIcon: () => <Image style={IconStyle} source={MathActive} />,
