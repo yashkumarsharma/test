@@ -1,4 +1,9 @@
-export function getCourseImage(courseId) {
+export default {
+  getCourseImage,
+  coursesIds: getCourseIds(),
+}
+
+function getCourseImage (courseId) {
   const courseName = courseIdToName(courseId)
   return {
     test: require('./assets/images/calculus.png'),

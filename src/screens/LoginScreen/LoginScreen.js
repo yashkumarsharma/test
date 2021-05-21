@@ -26,23 +26,7 @@ const LoginScreen = () => {
   const [passwordVisible, setPasswordVisible] = useState(false)
 
   const context = useContext(AppContext)
-  const { updateContext } = context
-
-  useEffect(() => {
-    loadUser()
-  }, [])
-
-  const loadUser = async () => {
-    try {
-      const storedUser = await AsyncStorage.getItem('user')
-      if (storedUser) {
-        const user = JSON.parse(storedUser)
-        updateContext({ user })
-      }
-    } catch (err) {
-      console.warn('Error while fetching user from Asycnstorage')
-    }
-  }
+  const { setUser } = context
 
   const submit = async () => {
     Toast.show('Signing in')
@@ -54,7 +38,7 @@ const LoginScreen = () => {
         ...data,
       }
       await AsyncStorage.setItem('user', JSON.stringify(user))
-      updateContext({ user })
+      setUser({ user })
     } else {
       Toast.show('Wrong email or password.', Toast.LONG)
     }

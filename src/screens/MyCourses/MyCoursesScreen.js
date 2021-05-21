@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext } from 'react'
 import {
   View,
   Text,
@@ -8,34 +8,32 @@ import {
   TouchableOpacity,
   Linking,
   ActivityIndicator,
+  RefreshControl,
 } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import PropTypes from 'prop-types'
-import { getStudentCourses } from '../../utilities/api'
 import colors from '../../assets/colors'
 import { latoFont } from '../../utilities/utilsFunctions'
-import { getCourseImage } from '../../config'
+import config from '../../config'
 import { AppContext } from '../../components/ContextProvider/ContextProvider'
 
 const MyCoursesScreen = ({ navigation: { navigate } }) => {
-  const [courses, setCourses] = useState(null)
-
-  const context = useContext(AppContext)
-  const isLogin = context?.user?.username || false
-  const getCourses = async () => {
-    const { courses } = await getStudentCourses()
-    setCourses(courses)
-  }
-  useEffect(() => {
-    if (!isLogin) return
-    getCourses()
-  }, [isLogin])
-
+  const { courses: { loading, data: courses }, getCourses } = useContext(AppContext)
+  const { getCourseImage } = config
   return (
     <ScrollView
       style={styles.scrollContainer}
-      contentContainerStyle={styles.scrollContent}>
-      {!courses ? (
+      contentContainerStyle={styles.scrollContent}
+      refreshControl={
+        <RefreshControl
+          refreshing={courses.length > 0 && loading}
+          onRefresh={getCourses}
+          tintColor={'#56aba6'}
+          colors={[colors.brand]}
+        />
+      }>
+      {!courses?.length > 0
+        ? (
         <View style={{ justifyContent: 'center', flexGrow: 1 }}>
           <ActivityIndicator color={colors.brand} />
         </View>

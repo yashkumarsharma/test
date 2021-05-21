@@ -1,6 +1,6 @@
 /* eslint-disable react/display-name */
 /* eslint-disable react/prop-types */
-import React from 'react'
+import React, { useContext, useMemo } from 'react'
 import { Image, View } from 'react-native'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import colors from '../../assets/colors'
@@ -12,15 +12,17 @@ import OptionsActive from '../../assets/icons/PersonActive.png'
 import OptionsInactive from '../../assets/icons/PersonInactive.png'
 import MathActive from '../../assets/icons/PencilInactive.png'
 import MyCourses from '../MyCourses/MyCourses'
-import { latoFont } from '../../utilities/utilsFunctions'
+import { latoFont, showMathTab } from '../../utilities/utilsFunctions'
 import OptionsScreen from '../OptionsScreen'
 import HeaderComponent from '../../components/HeaderComponent/HeaderComponent'
+import { AppContext } from '../../components/ContextProvider/ContextProvider'
 
 const Tab = createBottomTabNavigator()
 const IconStyle = { height: 24, width: 24 }
 
-function HomeScreen() {
-  // console.warn('api host is', Config.API_HOST)
+function HomeScreen () {
+  const { courses: { data } } = useContext(AppContext)
+  const showMath = useMemo(() => showMathTab(data), [data?.length])
   return (
     <Tab.Navigator
       initialRouteName='Courses'
@@ -68,8 +70,8 @@ function HomeScreen() {
           ),
         }}
       />
-      <Tab.Screen
-        name='Math'
+      {showMath && <Tab.Screen
+        name="Math"
         component={() => (
           <View style={{ flex: 1, height: 1000, backgroundColor: colors.bg }} />
         )}
@@ -78,7 +80,7 @@ function HomeScreen() {
           tabBarIcon: () => <Image style={IconStyle} source={MathActive} />,
           tabBarVisible: false,
         }}
-      />
+      />}
       <Tab.Screen
         name='Options'
         component={OptionsScreen}

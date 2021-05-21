@@ -8,7 +8,6 @@ import {
   Platform,
   Pressable,
 } from 'react-native'
-import AsyncStorage from '@react-native-community/async-storage'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import AntIcon from 'react-native-vector-icons/AntDesign'
 
@@ -17,8 +16,7 @@ import colors from '../../assets/colors'
 import { latoFont } from '../../utilities/utilsFunctions'
 
 const OptionsScreen = () => {
-  const context = useContext(AppContext)
-  const { updateContext } = context
+  const { onSignOut } = useContext(AppContext)
 
   const renderDownloadOptionRow = useCallback(() => {
     const downloadedSize = '2.65 GB' // Todo: Fetch from context
@@ -70,11 +68,6 @@ const OptionsScreen = () => {
         <AntIcon name={'right'} size={20} color={colors.link} />
       </Pressable>
     )
-  }, [])
-
-  const onSignOut = useCallback(async () => {
-    await AsyncStorage.removeItem('user')
-    updateContext({ user: {} })
   }, [])
 
   const renderSignOut = useCallback(

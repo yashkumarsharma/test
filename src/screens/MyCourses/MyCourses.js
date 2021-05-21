@@ -7,10 +7,6 @@ import CourseScreen from './CourseScreen'
 import ChapterScreen from './ChapterScreen'
 
 const MyCourses = () => {
-  useEffect(() => {
-    SplashScreen.hide()
-  }, [])
-
   const Stack = createStackNavigator()
 
   return (
