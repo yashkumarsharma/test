@@ -26,6 +26,9 @@
 3. Choose development OS and Target OS you want to start developing then follow the instructions.
 
 ### Environment Setup
+- git clone git@github.com:outlier-org/student-mobile.git
+- cd student-mobile
+- npm install
 - cp .env.sample .env
 - update environment variables
 
@@ -42,3 +45,6 @@
 
 #### Running on Android emulator
  - use the [Canary build of Android Studio](https://developer.android.com/studio/preview) which has arm64 support for Android virtual device.
+
+### Helpful commands
+- On iOS, if you are facing issue related to pods try this command `cd ios && pod deintegrate && pod install`
