@@ -36,7 +36,7 @@ const ChapterScreen = ({ route }) => {
 
   const getChapterData = async () => {
     const data = await Promise.all(
-      chapter?.sections?.map(section => {
+      chapter?.sections?.map((section) => {
         return loadSectionData(courseUUID, section?.section_uuid)
       }),
     )
@@ -72,13 +72,11 @@ const ChapterScreen = ({ route }) => {
           setModalVisible={setModalVisible}
           setSelectMode={setSelectMode}
         />
-        {!sections?.length > 0
-          ? (
+        {!sections?.length > 0 ? (
           <View style={{ justifyContent: 'center', flexGrow: 1 }}>
-            <ActivityIndicator size="large" color={colors.brand} />
+            <ActivityIndicator size='large' color={colors.brand} />
           </View>
-            )
-          : (
+        ) : (
           <View style={styles.container}>
             <ResourceHeader
               selectMode={selectMode}
@@ -125,8 +123,7 @@ const ChapterScreen = ({ route }) => {
                         22 MB
                       </Text>
                     </View>
-                    {selectMode
-                      ? (
+                    {selectMode ? (
                       <CheckBox
                         onClick={() => {
                           selected
@@ -136,14 +133,13 @@ const ChapterScreen = ({ route }) => {
                         isChecked={selected}
                         checkBoxColor={colors.brand}
                       />
-                        )
-                      : (
+                    ) : (
                       <Icon
                         name={isOpen ? 'chevron-thin-up' : 'chevron-thin-down'}
                         size={16}
-                        color="white"
+                        color='white'
                       />
-                        )}
+                    )}
                   </Pressable>
                   {isOpen &&
                     videos?.map((video, videoIndex) => (
@@ -196,7 +192,7 @@ const ChapterScreen = ({ route }) => {
               )
             })}
           </View>
-            )}
+        )}
       </ScrollView>
       <ResourceFooter
         selectMode={selectMode}

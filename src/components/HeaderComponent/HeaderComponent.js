@@ -12,7 +12,7 @@ import colors from '../../assets/colors'
 import Caret from '../../assets/icons/Caret.png'
 import { latoFont } from '../../utilities/utilsFunctions'
 
-function HeaderComponent ({ scene, previous, navigation: { goBack } }) {
+function HeaderComponent({ scene, previous, navigation: { goBack } }) {
   const progress = Animated.add(
     scene.progress.current,
     scene.progress.next || 0,
@@ -26,16 +26,14 @@ function HeaderComponent ({ scene, previous, navigation: { goBack } }) {
   return (
     <Animated.View style={{ ...styles.container, opacity }}>
       <View style={styles.titleContainer}>
-        {previous
-          ? (
+        {previous ? (
           <TouchableOpacity onPress={goBack} style={styles.PreviousContainer}>
             <Image source={Caret} style={styles.PreviousIcon} />
             <Text style={styles.PreviousText}>{previous?.route?.name}</Text>
           </TouchableOpacity>
-            )
-          : (
+        ) : (
           <Text style={styles.titleText}>{scene?.route?.name}</Text>
-            )}
+        )}
       </View>
     </Animated.View>
   )

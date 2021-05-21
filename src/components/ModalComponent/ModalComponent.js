@@ -8,15 +8,15 @@ import {
   View,
   Image,
 } from 'react-native'
+import PropTypes from 'prop-types'
 import FileDownload from '../../assets/icons/FileDownload.png'
 import RemoveFile from '../../assets/icons/RemoveFile.png'
 import { latoFont } from '../../utilities/utilsFunctions'
-import PropTypes from 'prop-types'
 
 const ModalComponent = ({ modalVisible, setModalVisible, setSelectMode }) => {
   return (
     <Modal
-      animationType="slide"
+      animationType='slide'
       transparent={true}
       visible={modalVisible}
       onRequestClose={() => {

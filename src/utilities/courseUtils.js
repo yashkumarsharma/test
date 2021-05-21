@@ -12,7 +12,7 @@ import {
   diffDays,
 } from './dateTimeUtils'
 
-export function getCohortDuration (course) {
+export function getCohortDuration(course) {
   // returns latest cohort duration from status data
   const latestCohort = getLatestCohort(course)
   if (latestCohort && latestCohort.duration) {
@@ -25,12 +25,12 @@ export function getCohortDuration (course) {
   return duration
 }
 
-function getLatestCohort (course) {
+function getLatestCohort(course) {
   const { statusData, cohort } = course
 
   if (!statusData || !statusData.length) return cohort
 
-  const assignedCohort = statusData.find(cohorts => cohorts.id === cohort.id)
+  const assignedCohort = statusData.find((cohorts) => cohorts.id === cohort.id)
   if (assignedCohort) {
     const { studentStatus, statusNote } = assignedCohort
     const hasAccessToTheCourse = !(
@@ -47,9 +47,9 @@ function getLatestCohort (course) {
   return sortedCohorts[0]
 }
 
-export function getCohortModifier (chapters, cohortDuration) {
+export function getCohortModifier(chapters, cohortDuration) {
   if (!chapters || !cohortDuration) return
-  const exams = chapters.filter(elem => elem.type === 'exam')
+  const exams = chapters.filter((elem) => elem.type === 'exam')
   if (!exams.length) return
   const finalExam = exams[exams.length - 1]
   const { unlock_at_week: courseLength } = finalExam
@@ -57,7 +57,7 @@ export function getCohortModifier (chapters, cohortDuration) {
   return cohortModifier
 }
 
-export function getCohortSpecialDays (course) {
+export function getCohortSpecialDays(course) {
   const latestCohort = getLatestCohort(course)
 
   if (latestCohort) {
@@ -94,7 +94,7 @@ export function getCohortSpecialDays (course) {
   return cohortSpecialDays
 }
 
-export function getCohortStartSecondsSinceEpoch (course) {
+export function getCohortStartSecondsSinceEpoch(course) {
   // returns latest cohort start date from status data
   const latestCohort = getLatestCohort(course)
   if (latestCohort && latestCohort.dateStart) {

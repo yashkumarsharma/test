@@ -9,13 +9,13 @@ import {
   Linking,
   ActivityIndicator,
 } from 'react-native'
+import LinearGradient from 'react-native-linear-gradient'
+import PropTypes from 'prop-types'
 import { getStudentCourses } from '../../utilities/api'
 import colors from '../../assets/colors'
-import LinearGradient from 'react-native-linear-gradient'
 import { latoFont } from '../../utilities/utilsFunctions'
 import { getCourseImage } from '../../config'
 import { AppContext } from '../../components/ContextProvider/ContextProvider'
-import PropTypes from 'prop-types'
 
 const MyCoursesScreen = ({ navigation: { navigate } }) => {
   const [courses, setCourses] = useState(null)
@@ -35,13 +35,11 @@ const MyCoursesScreen = ({ navigation: { navigate } }) => {
     <ScrollView
       style={styles.scrollContainer}
       contentContainerStyle={styles.scrollContent}>
-      {!courses
-        ? (
+      {!courses ? (
         <View style={{ justifyContent: 'center', flexGrow: 1 }}>
           <ActivityIndicator color={colors.brand} />
         </View>
-          )
-        : (
+      ) : (
         <View style={styles.container}>
           {courses.map((course, key) => {
             return (
@@ -80,7 +78,7 @@ const MyCoursesScreen = ({ navigation: { navigate } }) => {
             </TouchableOpacity>
           </View>
         </View>
-          )}
+      )}
     </ScrollView>
   )
 }

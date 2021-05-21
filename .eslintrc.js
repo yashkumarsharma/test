@@ -19,5 +19,16 @@ module.exports = {
   ],
   rules: {
     'comma-dangle': ['error', 'always-multiline'],
+    'import/imports-first': ['error', 'absolute-first'],
+    'import/order': ['error', {
+      pathGroups: [
+        {
+          pattern: '@app/**',
+          group: 'external',
+          position: 'after',
+        },
+      ],
+      pathGroupsExcludedImportTypes: ['builtin'],
+    }],
   },
 }

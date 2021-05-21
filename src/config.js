@@ -1,4 +1,4 @@
-export function getCourseImage (courseId) {
+export function getCourseImage(courseId) {
   const courseName = courseIdToName(courseId)
   return {
     test: require('./assets/images/calculus.png'),
@@ -12,7 +12,7 @@ export function getCourseImage (courseId) {
   }[courseName]
 }
 
-function getCourseIds () {
+function getCourseIds() {
   return {
     test: 'test-course',
     calculus: 'b227c462-332c-40e0-8735-ea3af6f11661',
@@ -25,11 +25,11 @@ function getCourseIds () {
   }
 }
 
-function courseIdToName (id) {
+function courseIdToName(id) {
   return invert(getCourseIds())[id]
 }
 
-function invert (obj) {
+function invert(obj) {
   const inverted = {}
   Object.keys(obj).forEach(function (k) {
     const v = obj[k]

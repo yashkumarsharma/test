@@ -8,13 +8,14 @@ import {
   TouchableOpacity,
   Image,
 } from 'react-native'
+import PropTypes from 'prop-types'
+import CheckBox from 'react-native-check-box'
 import { getCourseData } from '../../utilities/api'
 import colors from '../../assets/colors'
 import { latoFont } from '../../utilities/utilsFunctions'
 import Vector from '../../assets/icons/Vector.png'
 import Download from '../../assets/icons/Download.png'
 import Lock from '../../assets/icons/Lock.png'
-import PropTypes from 'prop-types'
 import {
   secondsSinceEpoch,
   secondsToFormattedDateShort,
@@ -27,7 +28,6 @@ import {
   getCohortStartSecondsSinceEpoch,
 } from '../../utilities/courseUtils'
 import ModalComponent from '../../components/ModalComponent/ModalComponent'
-import CheckBox from 'react-native-check-box'
 import { useSelect } from '../../hooks/useSelect'
 import ResourceHeader from '../../components/ResourceHeader/ResourceHeader'
 import ResourceFooter from '../../components/ResourceFooter/ResourceFooter'
@@ -57,7 +57,7 @@ const CourseScreen = ({ route, navigation: { navigate } }) => {
       cohortStartDate,
     }
     setCohortData(cohortData)
-    setChapter(chapters.filter(chap => chap?.type === 'chapter'))
+    setChapter(chapters.filter((chap) => chap?.type === 'chapter'))
   }
 
   const isAllSelected = chapters?.length === selectedOptions.length
@@ -90,13 +90,11 @@ const CourseScreen = ({ route, navigation: { navigate } }) => {
           setModalVisible={setModalVisible}
           setSelectMode={setSelectMode}
         />
-        {!chapters
-          ? (
+        {!chapters ? (
           <View style={{ justifyContent: 'center', flexGrow: 1 }}>
-            <ActivityIndicator size="large" color={colors.brand} />
+            <ActivityIndicator size='large' color={colors.brand} />
           </View>
-            )
-          : (
+        ) : (
           <View style={styles.container}>
             <ResourceHeader
               selectMode={selectMode}
@@ -146,8 +144,7 @@ const CourseScreen = ({ route, navigation: { navigate } }) => {
                       )}
                     </View>
                   </View>
-                  {selectMode
-                    ? (
+                  {selectMode ? (
                     <CheckBox
                       onClick={() => {
                         selected ? remove(chapterUUID) : add(chapterUUID)
@@ -155,18 +152,17 @@ const CourseScreen = ({ route, navigation: { navigate } }) => {
                       isChecked={selected}
                       checkBoxColor={colors.brand}
                     />
-                      )
-                    : (
+                  ) : (
                     <Image
                       source={isLocked ? Lock : Vector}
                       style={isLocked ? styles.lockIcon : styles.icon}
                     />
-                      )}
+                  )}
                 </TouchableOpacity>
               )
             })}
           </View>
-            )}
+        )}
       </ScrollView>
       <ResourceFooter
         selectMode={selectMode}

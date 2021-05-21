@@ -1,11 +1,11 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Text, StyleSheet, View, Pressable } from 'react-native'
+import CheckBox from 'react-native-check-box'
 import colors from '../../assets/colors'
 import { latoFont } from '../../utilities/utilsFunctions'
-import CheckBox from 'react-native-check-box'
 
-function ResourceHeader ({
+function ResourceHeader({
   selectMode,
   isAllSelected,
   title,
@@ -14,8 +14,7 @@ function ResourceHeader ({
 }) {
   return (
     <View style={styles.headerContainer}>
-      {selectMode
-        ? (
+      {selectMode ? (
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           <CheckBox
             style={{ marginRight: 12 }}
@@ -25,10 +24,9 @@ function ResourceHeader ({
           />
           <Text style={styles.title}>Select All</Text>
         </View>
-          )
-        : (
+      ) : (
         <Text style={styles.courseTitle}>{title}</Text>
-          )}
+      )}
       <Pressable onPress={onPress}>
         <Text style={styles.selectButton}>
           {selectMode ? 'CANCEL' : 'SELECT'}

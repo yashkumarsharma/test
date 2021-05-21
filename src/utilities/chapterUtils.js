@@ -6,7 +6,7 @@ import {
   diffDays,
 } from './dateTimeUtils'
 
-export function getChapterLockDates ({ chapter, cohortData }) {
+export function getChapterLockDates({ chapter, cohortData }) {
   let unlockDate = null
   let lockDate = null
 
@@ -65,7 +65,7 @@ export function getChapterLockDates ({ chapter, cohortData }) {
   }
 }
 
-function calculateUnlockDate (unlockAfterDays, cohortStartDate) {
+function calculateUnlockDate(unlockAfterDays, cohortStartDate) {
   const date = new Date(cohortStartDate)
   date.setUTCHours(1, 1)
 

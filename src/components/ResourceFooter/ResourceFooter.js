@@ -5,7 +5,7 @@ import { latoFont } from '../../utilities/utilsFunctions'
 import RemoveFile from '../../assets/icons/RemoveFileBrand.png'
 import DownloadFile from '../../assets/icons/FileDownloadBrand.png'
 
-function ResourceFooter ({
+function ResourceFooter({
   selectMode,
   selectedOptions,
   downloadFiles,

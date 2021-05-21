@@ -14,7 +14,7 @@ export {
 // Does not need tests because that would require mocking Date.now and is not
 // worth the effort since this method is already well known. Instead see:
 // https://stackoverflow.com/questions/3830244/get-current-date-time-in-seconds
-function secondsSinceEpoch () {
+function secondsSinceEpoch() {
   return Math.floor(Date.now() / 1000)
 }
 
@@ -22,7 +22,7 @@ function secondsSinceEpoch () {
 // Does not need tests because that would require mocking Date.now and is not
 // worth the effort since this method is already well known. Instead see:
 // https://stackoverflow.com/questions/3830244/get-current-date-time-in-seconds
-function dateToSecondsSinceEpoch (date) {
+function dateToSecondsSinceEpoch(date) {
   return Math.floor(date.getTime() / 1000)
 }
 
@@ -30,7 +30,7 @@ function dateToSecondsSinceEpoch (date) {
 // yet and clearly doesn't support locales other then 'en-us'. Putting all the
 // date formatting in this module will help us eventually determine the best
 // abstraction so this is a good first step.
-function secondsToFormattedDateShort (seconds, dayType = '2-digit') {
+function secondsToFormattedDateShort(seconds, dayType = '2-digit') {
   const convDate = new Date(seconds * 1000)
   return convDate.toLocaleString('en-us', { month: 'short', day: dayType })
 }
@@ -43,7 +43,7 @@ function secondsToFormattedDateShort (seconds, dayType = '2-digit') {
  * @returns {string} date of next specified day (e.g 'Jan 10') if
  * old month is not equal to new month or short param is set to true
  */
-function addDaysToDate (dateInSeconds, days, short = false) {
+function addDaysToDate(dateInSeconds, days, short = false) {
   const newDate = new Date(dateInSeconds * 1000)
   const currentDateMonth = newDate.getMonth()
   newDate.setDate(newDate.getDate() + days)
@@ -58,12 +58,12 @@ function addDaysToDate (dateInSeconds, days, short = false) {
   return newDate.getDate()
 }
 
-function weeksToSeconds (weeks) {
+function weeksToSeconds(weeks) {
   // Days, hours, minutes, seconds
   return parseFloat(weeks) * 7 * 24 * 60 * 60
 }
 
-function daysToSeconds (days) {
+function daysToSeconds(days) {
   return parseFloat(days) * 24 * 60 * 60
 }
 
@@ -71,7 +71,7 @@ function daysToSeconds (days) {
 // date and the time. For example, if a UTC date of 2019-Sep-24 1am is
 // given and the IANATimeZone is 'America/Los_Angeles', it will return a date
 // object that is 2019-Sep-24 1am for Los Angeles.
-function changeTimezone (date, IANATimezone) {
+function changeTimezone(date, IANATimezone) {
   // Create a new date in the requested timezone.
   const invdate = new Date(
     date.toLocaleString('en-US', {
@@ -87,7 +87,7 @@ function changeTimezone (date, IANATimezone) {
 }
 
 // Returns the difference in days between two dates
-function diffDays (startDate, endDate) {
+function diffDays(startDate, endDate) {
   const date1 = new Date(startDate * 1000)
   const date2 = new Date(endDate * 1000)
   let diff = (date1.getTime() - date2.getTime()) / 1000
@@ -95,7 +95,7 @@ function diffDays (startDate, endDate) {
   return Math.abs(Math.round(diff))
 }
 
-function calculateLockDate (unlockAfterDays, unlockDuration, cohortStartDate) {
+function calculateLockDate(unlockAfterDays, unlockDuration, cohortStartDate) {
   const unlockDatePST = calculateUnlockDate(unlockAfterDays, cohortStartDate)
 
   // Lock duration of zero means never unlock, so we make the unlock and lock
@@ -124,7 +124,7 @@ function calculateLockDate (unlockAfterDays, unlockDuration, cohortStartDate) {
   return lockDatePST
 }
 
-function calculateUnlockDate (unlockAfterDays, cohortStartDate) {
+function calculateUnlockDate(unlockAfterDays, cohortStartDate) {
   // Sets the time to 1:01am to account for daylight savings. Without doing
   // this when we calculate the number of weeks it might end up landing
   // at 11am. This ensures that if we lose an hour due to daylight
@@ -154,7 +154,7 @@ function calculateUnlockDate (unlockAfterDays, cohortStartDate) {
   return unlockDatePST
 }
 
-function getVideoDurationString (duration) {
+function getVideoDurationString(duration) {
   const durationArray = duration.split(':')
   if (durationArray.length === 2) {
     return Math.round(Number(duration.replace(':', '.'))) + ' Mins'

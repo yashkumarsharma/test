@@ -1,7 +1,5 @@
 module.exports = {
-  bracketSpacing: true,
-  jsxBracketSameLine: true,
-  singleQuote: true,
-  trailingComma: 'all',
-  arrowParens: 'avoid',
-};
+  ...require("prettier-config-standard"),
+  trailingComma: "all",
+  jsxSingleQuote: true
+}

@@ -68,7 +68,7 @@ const LoginScreen = () => {
         style={styles.eyeIcon}
         name={iconName}
         size={20}
-        color="white"
+        color='white'
       />
     )
   }
@@ -80,7 +80,7 @@ const LoginScreen = () => {
           onPress={() => Linking.openURL('https://www.outlier.org/')}
           style={styles.logo}
           source={toRnSource(logo)}
-          resizeMode="contain"
+          resizeMode='contain'
         />
       </Pressable>
       <Text style={styles.description}> Companion App </Text>
@@ -88,19 +88,19 @@ const LoginScreen = () => {
       <View style={styles.inputSection}>
         <TextInput
           style={styles.input}
-          placeholder="Email"
+          placeholder='Email'
           onChangeText={setUsername}
-          placeholderTextColor="white"
-          keyboardType="email-address"
+          placeholderTextColor='white'
+          keyboardType='email-address'
           defaultValue={username}
         />
       </View>
       <View style={styles.inputSection}>
         <TextInput
           style={styles.input}
-          placeholder="Password"
+          placeholder='Password'
           onChangeText={setPassword}
-          placeholderTextColor="white"
+          placeholderTextColor='white'
           secureTextEntry={
             Platform.OS === 'android'
               ? password.length > 0 && !passwordVisible

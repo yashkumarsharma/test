@@ -19,11 +19,11 @@ import HeaderComponent from '../../components/HeaderComponent/HeaderComponent'
 const Tab = createBottomTabNavigator()
 const IconStyle = { height: 24, width: 24 }
 
-function HomeScreen () {
+function HomeScreen() {
   // console.warn('api host is', Config.API_HOST)
   return (
     <Tab.Navigator
-      initialRouteName="Courses"
+      initialRouteName='Courses'
       tabBarOptions={{
         tabStyle: {
           borderColor: '#292929',
@@ -43,7 +43,7 @@ function HomeScreen () {
         },
       }}>
       <Tab.Screen
-        name="Courses"
+        name='Courses'
         component={MyCourses}
         options={{
           tabBarLabel: 'My Courses',
@@ -56,7 +56,7 @@ function HomeScreen () {
         }}
       />
       <Tab.Screen
-        name="Downloads"
+        name='Downloads'
         component={() => <View />}
         options={{
           tabBarLabel: 'Downloads',
@@ -69,7 +69,7 @@ function HomeScreen () {
         }}
       />
       <Tab.Screen
-        name="Math"
+        name='Math'
         component={() => (
           <View style={{ flex: 1, height: 1000, backgroundColor: colors.bg }} />
         )}
@@ -80,7 +80,7 @@ function HomeScreen () {
         }}
       />
       <Tab.Screen
-        name="Options"
+        name='Options'
         component={OptionsScreen}
         options={{
           header: HeaderComponent,

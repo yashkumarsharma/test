@@ -19,7 +19,7 @@ const Options = () => {
   return (
     <Stack.Navigator>
       <Stack.Screen
-        name="Options"
+        name='Options'
         component={OptionsScreen}
         options={{
           header: HeaderComponent,
