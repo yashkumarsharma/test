@@ -11,6 +11,7 @@ import {
 import Icon from 'react-native-vector-icons/Entypo'
 import PropTypes from 'prop-types'
 import CheckBox from 'react-native-check-box'
+import FastImage from 'react-native-fast-image'
 import { loadSectionData } from '../../utilities/api'
 import colors from '../../assets/colors'
 import { latoFont } from '../../utilities/utilsFunctions'
@@ -155,7 +156,7 @@ const ChapterScreen = ({ route }) => {
                             alignItems: 'center',
                             justifyContent: 'center',
                           }}>
-                          <Image
+                          <FastImage
                             style={styles.thumbnail}
                             source={{
                               uri: `https://cdnsecakmi.kaltura.com/p/2654411/thumbnail/entry_id/${

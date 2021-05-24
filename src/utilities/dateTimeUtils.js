@@ -155,6 +155,7 @@ function calculateUnlockDate(unlockAfterDays, cohortStartDate) {
 }
 
 function getVideoDurationString(duration) {
+  if (duration?.length >= 0) return ''
   const durationArray = duration.split(':')
   if (durationArray.length === 2) {
     return Math.round(Number(duration.replace(':', '.'))) + ' Mins'
