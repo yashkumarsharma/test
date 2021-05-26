@@ -6,6 +6,7 @@ import { horizontalTransition } from '../../utilities/navigationUtils'
 import MyCoursesScreen from './MyCoursesScreen'
 import CourseScreen from './CourseScreen'
 import ChapterScreen from './ChapterScreen'
+import VideoScreen from './VideoScreen'
 
 const MyCourses = () => {
   const Stack = createStackNavigator()
@@ -38,6 +39,13 @@ const MyCourses = () => {
       <Stack.Screen
         name='chapter'
         component={ChapterScreen}
+        options={{
+          header: HeaderComponent,
+        }}
+      />
+      <Stack.Screen
+        name='video'
+        component={VideoScreen}
         options={{
           header: HeaderComponent,
         }}

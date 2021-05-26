@@ -23,7 +23,7 @@ import Download from '../../assets/icons/Download.png'
 import Play from '../../assets/icons/Play.png'
 import { getVideoDurationString } from '../../utilities/dateTimeUtils'
 
-const ChapterScreen = ({ route }) => {
+const ChapterScreen = ({ route, navigation: { navigate } }) => {
   const {
     course: { id: courseUUID },
     chapter,
@@ -144,12 +144,15 @@ const ChapterScreen = ({ route }) => {
                   </Pressable>
                   {isOpen &&
                     videos?.map((video, videoIndex) => (
-                      <View
+                      <Pressable
                         style={{
                           flexDirection: 'row',
                           alignItems: 'flex-start',
                           marginBottom:
                             videoIndex === videos.length - 1 ? 0 : 21,
+                        }}
+                        onPress={() => {
+                          navigate('video', { video })
                         }}>
                         <View
                           style={{
@@ -187,7 +190,7 @@ const ChapterScreen = ({ route }) => {
                             </Text>
                           </View>
                         </View>
-                      </View>
+                      </Pressable>
                     ))}
                 </View>
               )
