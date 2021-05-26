@@ -88,8 +88,8 @@ const ChapterScreen = ({ route }) => {
             />
             {sections?.map((section, secIndex) => {
               const videos =
-                section?.section_exe?.lecture?.lecturevideos ||
-                section?.section_exe?.multi_lecture_videos?.videos
+                section?.section_exe?.multi_lecture_videos?.videos ||
+                section?.section_exe?.lecture?.lecturevideos
 
               const selected = isSelected(section?.section_uuid)
               const isOpen = displayedSections[secIndex]
