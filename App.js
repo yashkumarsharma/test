@@ -53,13 +53,6 @@ const App = () => {
                 headerShown: false,
               }}
             />
-            <Stack.Screen
-              name='Math'
-              component={() => <View style={{ flex: 1, height: 1000, backgroundColor: colors.bg }}/>}
-              options={{
-                headerShown: false,
-              }}
-            />
           </Stack.Navigator>
         </SafeAreaView>
       </NavigationContainer>

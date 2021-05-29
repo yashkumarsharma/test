@@ -41,6 +41,11 @@ export default function reducer (state, action) {
           data: action.courses,
         },
       }
+    case 'SET_DOWNLOADS_DATA':
+      return {
+        ...state,
+        downloads: action.data,
+      }
     default:
       return new Error()
   }

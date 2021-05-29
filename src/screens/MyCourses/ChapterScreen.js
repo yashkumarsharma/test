@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
 import {
   View,
   Text,
@@ -22,6 +22,7 @@ import ResourceFooter from '../../components/ResourceFooter/ResourceFooter'
 import Download from '../../assets/icons/Download.png'
 import Play from '../../assets/icons/Play.png'
 import { getVideoDurationString } from '../../utilities/dateTimeUtils'
+import { AppContext } from '../../components/ContextProvider/ContextProvider'
 
 const ChapterScreen = ({ route, navigation: { navigate } }) => {
   const {
@@ -34,6 +35,8 @@ const ChapterScreen = ({ route, navigation: { navigate } }) => {
   const [displayedSections, setDisplayedSections] = useState([])
   const [selectMode, setSelectMode] = useState('')
   const { selectedOptions, reset, add, remove, isSelected } = useSelect([])
+  const context = useContext(AppContext)
+  const { addDownloadsData } = context
 
   const getChapterData = async () => {
     const data = await Promise.all(
@@ -61,6 +64,43 @@ const ChapterScreen = ({ route, navigation: { navigate } }) => {
       reset()
       setSelectMode('')
     } else setModalVisible(true)
+  }
+
+  const triggerDownload = (video, secIndex) => {
+    // Add code to download the video
+    // If successful, the following code should be executed
+    const courseTitle = route?.params?.course?.displayName
+    const chapter = route?.params?.chapter || {}
+    const section = chapter.sections?.[secIndex] || {}
+    const chapterTitle = `Chapter ${index + 1}: ${chapter.title || ''}`
+    const sectionTitle = `${index + 1}.${secIndex + 1}: ${section.title || ''}`
+    // The structure is kept generic and it is required for Downloads functionality.
+    // It supports multiple chapters/sections/videos.
+    // They can be updated in a single call.
+    const downloadsObject = {
+      [courseUUID]: {
+        title: courseTitle,
+        chapters: {
+          [chapter.chapter_uuid]: {
+            title: chapterTitle,
+            sections: {
+              [section.section_uuid]: {
+                title: sectionTitle,
+                videos: {
+                  [video.kaltura_embed_code || video.kalturaEmbedCode]: {
+                    // TODO: optimize this after size course/video route is implemented
+                    // more videos can be added in a similar fashion
+                    ...video,
+                    size: 456000, // size in Bytes // Dummy value for now
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    }
+    addDownloadsData(downloadsObject)
   }
 
   return (
@@ -185,6 +225,12 @@ const ChapterScreen = ({ route, navigation: { navigate } }) => {
                               style={styles.downloadImage}
                             />
                             <Text style={styles.downloadText}>2 GB</Text>
+                            <Text
+                              onPress={() => triggerDownload(video, secIndex)}
+                              style={styles.downloadText}
+                            >
+                              Click to Download
+                            </Text>
                             <Text style={styles.downloadText}>
                               {getVideoDurationString(video?.duration)}
                             </Text>

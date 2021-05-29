@@ -46,8 +46,19 @@ const styles = StyleSheet.create({
     borderBottomColor: 'rgba(255, 255, 255, 0.1)',
     borderBottomWidth: 1,
   },
-  title: { fontFamily: latoFont('Bold'), fontSize: 16, color: '#FFFFFF' },
-  courseTitle: { fontFamily: latoFont('Bold'), fontSize: 14, color: '#B1BFC5' },
+  title: {
+    fontFamily: latoFont('Bold'),
+    fontSize: 16,
+    color: '#FFFFFF',
+    lineHeight: 25,
+  },
+  courseTitle: {
+    fontFamily: latoFont('Bold'),
+    fontSize: 16,
+    color: '#B1BFC5',
+    // This will prevent line jostling due to checkbox
+    lineHeight: 25,
+  },
   selectButton: {
     fontFamily: latoFont('Bold'),
     fontSize: 14,

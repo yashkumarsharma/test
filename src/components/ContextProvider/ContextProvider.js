@@ -1,6 +1,9 @@
 import React, { createContext, useReducer, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import AsyncStorage from '@react-native-community/async-storage'
+import merge from 'lodash/merge'
+import omit from 'lodash/omit'
+
 import { getStudentCourses } from '../../utilities/api'
 import reducer from './reducer'
 
@@ -14,12 +17,14 @@ const ContextProvider = ({ children }) => {
       loading: false,
       data: [],
     },
+    downloads: {},
   }
 
   const [state, dispatch] = useReducer(reducer, initialState)
 
   useEffect(() => {
     loadUser()
+    loadDownloadsData()
   }, [])
 
   const getCourses = async () => {
@@ -53,6 +58,61 @@ const ContextProvider = ({ children }) => {
     dispatch({ type: 'SIGN_OUT' })
   }
 
+  const loadDownloadsData = async () => {
+    try {
+      const storedData = await AsyncStorage.getItem('downloads')
+      if (storedData) {
+        const data = JSON.parse(storedData)
+        dispatch({ type: 'SET_DOWNLOADS_DATA', data })
+      }
+    } catch (err) {
+      console.warn('Error while fetching downloads data from Asycnstorage')
+    }
+  }
+
+  const updateDownloadsSize = data => {
+    // Data will be present on last level
+    // Sum it up and update the parent nodes
+    for (const [courseId, course] of Object.entries(data)) {
+      const chapters = course.chapters
+      let courseSize = 0
+      for (const [chapterId, chapter] of Object.entries(chapters)) {
+        const sections = chapter.sections
+        let chapterSize = 0
+        for (const [sectionId, section] of Object.entries(sections)) {
+          const videos = section.videos
+          let sectionSize = 0
+          for (const [videoId, video] of Object.entries(videos)) {
+            console.log('videoId', videoId)
+            sectionSize += video.size
+          }
+          sections[sectionId].size = sectionSize
+          chapterSize += sectionSize
+        }
+        chapters[chapterId].size = chapterSize
+        courseSize += chapterSize
+      }
+      data[courseId].size = courseSize
+    }
+    return data
+  }
+
+  const addDownloadsData = async data => {
+    const stateData = merge(state.downloads, data)
+
+    const updatedData = updateDownloadsSize(stateData)
+
+    dispatch({ type: 'SET_DOWNLOADS_DATA', data: updatedData })
+    await AsyncStorage.setItem('downloads', JSON.stringify(updatedData))
+  }
+
+  const removeCourseFromDownloads = async selectedCourses => {
+    const data = omit(state.downloads, selectedCourses)
+
+    dispatch({ type: 'SET_DOWNLOADS_DATA', data })
+    await AsyncStorage.setItem('downloads', JSON.stringify(data))
+  }
+
   return (
     <AppContext.Provider
       value={{
@@ -60,6 +120,8 @@ const ContextProvider = ({ children }) => {
         setUser: setUser,
         getCourses,
         onSignOut,
+        addDownloadsData,
+        removeCourseFromDownloads,
       }}>
       {children}
     </AppContext.Provider>

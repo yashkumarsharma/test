@@ -23,3 +23,13 @@ export const showMathTab = (data) => {
 
   return intersection(subscribedCourses, MathTabCourses)
 }
+
+const UNITS = ['B', 'KB', 'MB', 'GB']
+
+export const getPrettySize = number => {
+  if (number === 0) return '0.00'
+
+  const exponent = Math.min(Math.floor(Math.log(number) / Math.log(1024)), UNITS.length - 1)
+  const size = (number / Math.pow(1024, exponent)).toPrecision(3)
+  return `${size} ${UNITS[exponent]}`
+}

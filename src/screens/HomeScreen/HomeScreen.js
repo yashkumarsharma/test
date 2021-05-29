@@ -1,7 +1,7 @@
 /* eslint-disable react/display-name */
 /* eslint-disable react/prop-types */
 import React, { useContext, useMemo } from 'react'
-import { Image, View } from 'react-native'
+import { Image } from 'react-native'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import colors from '../../assets/colors'
 import MyCoursesInactive from '../../assets/icons/MyCoursesInactive.png'
@@ -15,7 +15,7 @@ import MyCourses from '../MyCourses/MyCourses'
 import { latoFont, showMathTab } from '../../utilities/utilsFunctions'
 import OptionsScreen from '../OptionsScreen'
 import MathScreen from '../MathsScreen'
-import HeaderComponent from '../../components/HeaderComponent/HeaderComponent'
+import DownloadsScreen from '../DownloadsScreen'
 import { AppContext } from '../../components/ContextProvider/ContextProvider'
 
 const Tab = createBottomTabNavigator()
@@ -60,7 +60,7 @@ function HomeScreen () {
       />
       <Tab.Screen
         name='Downloads'
-        component={() => <View />}
+        component={DownloadsScreen}
         options={{
           tabBarLabel: 'Downloads',
           tabBarIcon: ({ focused }) => (
@@ -84,7 +84,6 @@ function HomeScreen () {
         name='Options'
         component={OptionsScreen}
         options={{
-          header: HeaderComponent,
           tabBarLabel: 'Options',
           tabBarIcon: ({ focused }) => (
             <Image
