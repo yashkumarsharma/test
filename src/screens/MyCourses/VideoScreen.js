@@ -7,6 +7,7 @@ import {
   Modal,
   Dimensions,
   TouchableWithoutFeedback,
+  Platform,
 } from 'react-native'
 import PropTypes from 'prop-types'
 import Video from 'react-native-video'
@@ -14,6 +15,7 @@ import Icon from 'react-native-vector-icons/Entypo'
 import PDFView from 'react-native-view-pdf'
 import colors from '../../assets/colors'
 import { latoFont } from '../../utilities/utilsFunctions'
+import VideoPlayer from '../../components/VideoPlayer/VideoPlayer'
 
 const screenWidth = Math.round(Dimensions.get('window').width)
 
@@ -30,26 +32,29 @@ const VideoScreen = ({ route }) => {
     <View style={styles.screenContainer}>
       <Text style={styles.title}>{video?.title}</Text>
       <View>
-        <Video
-          controls={true}
-          paused={true}
-          ignoreSilentSwitch='ignore'
-          playWhenInactive
-          playInBackground={false}
-          pictureInPicture={true}
-          resizeMode='cover'
-          ref={videoRef}
-          onLoad={load}
-          onPictureInPictureStatusChanged={(props) =>
-            console.log('PIP STATE CHANGE', props)
-          }
-          source={{
-            uri:
-              'https://file-examples-com.github.io/uploads/2017/04/file_example_MP4_480_1_5MG.mp4',
-          }}
-          style={styles.backgroundVideo}
-        />
-        <Text style={styles.videoDuration}>{video?.duration}</Text>
+        {Platform.OS === 'ios' ? (
+          <Video
+            controls={true}
+            paused={true}
+            ignoreSilentSwitch='ignore'
+            playWhenInactive
+            playInBackground={false}
+            pictureInPicture={true}
+            resizeMode='cover'
+            ref={videoRef}
+            onLoad={load}
+            source={{
+              uri:
+                'https://file-examples-com.github.io/uploads/2017/04/file_example_MP4_480_1_5MG.mp4',
+            }}
+            style={styles.backgroundVideo}
+          />
+        ) : (
+          <VideoPlayer />
+        )}
+        {Platform.OS === 'ios' && (
+          <Text style={styles.videoDuration}>{video?.duration}</Text>
+        )}
       </View>
       {video?.course_download?.map((resource) => (
         <Pressable
