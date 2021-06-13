@@ -113,6 +113,16 @@ const ContextProvider = ({ children }) => {
     await AsyncStorage.setItem('downloads', JSON.stringify(data))
   }
 
+  const removeChaptersFromDownloads = async (courseId, selectedChapters) => {
+    const downloads = { ...state.downloads }
+    const chaptersData = omit(downloads[courseId].chapters, selectedChapters)
+    downloads[courseId].chapters = chaptersData
+    const data = updateDownloadsSize(downloads)
+
+    dispatch({ type: 'SET_DOWNLOADS_DATA', data })
+    await AsyncStorage.setItem('downloads', JSON.stringify(data))
+  }
+
   return (
     <AppContext.Provider
       value={{
@@ -122,6 +132,7 @@ const ContextProvider = ({ children }) => {
         onSignOut,
         addDownloadsData,
         removeCourseFromDownloads,
+        removeChaptersFromDownloads,
       }}>
       {children}
     </AppContext.Provider>

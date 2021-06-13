@@ -28,7 +28,6 @@ const Courses = ({ navigation: { navigate } }) => {
     removeCourseFromDownloads,
   } = useContext(AppContext)
 
-  // const coursesWithDownloads = Object.keys(downloads)
   const courses = Object.keys(downloads).map(courseId => ({
     id: courseId,
     title: downloads[courseId].title,
@@ -96,7 +95,7 @@ const Courses = ({ navigation: { navigate } }) => {
                 key={key}
                 style={styles.cardContainer}
                 onPress={() => {
-                  navigate('chapters', {
+                  navigate('downloads-chapters', {
                     course,
                   })
                 }}

@@ -29,7 +29,7 @@ function HeaderComponent({ scene, previous, navigation: { goBack } }) {
         {previous ? (
           <TouchableOpacity onPress={goBack} style={styles.PreviousContainer}>
             <Image source={Caret} style={styles.PreviousIcon} />
-            <Text style={styles.PreviousText}>{previous?.route?.name}</Text>
+            <Text style={styles.PreviousText}>{previous?.route?.title || previous?.route?.name}</Text>
           </TouchableOpacity>
         ) : (
           <Text style={styles.titleText}>{scene?.route?.name}</Text>

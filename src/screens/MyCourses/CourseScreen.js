@@ -200,6 +200,7 @@ const styles = StyleSheet.create({
 })
 
 CourseScreen.propTypes = {
+  navigation: PropTypes.objectOf(PropTypes.func),
   route: PropTypes.shape({
     params: PropTypes.objectOf(PropTypes.any),
   }),

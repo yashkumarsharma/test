@@ -1,9 +1,12 @@
 import React, { useEffect } from 'react'
+import { Platform } from 'react-native'
 import SplashScreen from 'react-native-splash-screen'
 import { createStackNavigator } from '@react-navigation/stack'
 
 import HeaderComponent from '../../components/HeaderComponent/HeaderComponent'
+import { horizontalTransition } from '../../utilities/navigationUtils'
 import Courses from './Courses'
+import Chapters from './Chapters'
 
 const Downloads = () => {
   useEffect(() => {
@@ -13,10 +16,26 @@ const Downloads = () => {
   const Stack = createStackNavigator()
 
   return (
-    <Stack.Navigator>
+    <Stack.Navigator
+      screenOptions={{
+        gestureEnabled: true,
+        ...Platform.select({
+          android: horizontalTransition,
+        }),
+      }}
+      initialRouteName='Downloads'
+      headerMode='float'
+      {...horizontalTransition}>
       <Stack.Screen
         name='Downloads'
         component={Courses}
+        options={{
+          header: HeaderComponent,
+        }}
+      />
+      <Stack.Screen
+        name='downloads-chapters'
+        component={Chapters}
         options={{
           header: HeaderComponent,
         }}
