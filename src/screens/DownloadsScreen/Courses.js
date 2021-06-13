@@ -95,7 +95,7 @@ const Courses = ({ navigation: { navigate } }) => {
                 key={key}
                 style={styles.cardContainer}
                 onPress={() => {
-                  navigate('downloads-chapters', {
+                  navigate('downloads-folders', {
                     course,
                   })
                 }}

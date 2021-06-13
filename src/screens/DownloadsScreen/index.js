@@ -7,6 +7,7 @@ import HeaderComponent from '../../components/HeaderComponent/HeaderComponent'
 import { horizontalTransition } from '../../utilities/navigationUtils'
 import Courses from './Courses'
 import Chapters from './Chapters'
+import Sections from './Sections'
 
 const Downloads = () => {
   useEffect(() => {
@@ -34,8 +35,16 @@ const Downloads = () => {
         }}
       />
       <Stack.Screen
-        name='downloads-chapters'
+        name='downloads-folders'
         component={Chapters}
+        options={{
+          header: HeaderComponent,
+          headerTitle: 'Chapters',
+        }}
+      />
+      <Stack.Screen
+        name='downloads-chapters'
+        component={Sections}
         options={{
           header: HeaderComponent,
         }}

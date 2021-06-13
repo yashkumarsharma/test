@@ -57,17 +57,15 @@ const Chapters = (props) => {
     selectedSize += chapters[selectedOptions[i]]?.size || 0
   }
 
-  console.log('selectedOptions', selectedOptions)
-
   return (
     <>
       <ScrollView
         style={styles.scrollContainer}
         contentContainerStyle={styles.scrollContent}>
-        {!chapters
+        {!chapterIds?.length > 0
           ? (
             <View style={{ justifyContent: 'center', flexGrow: 1 }}>
-              <ActivityIndicator size='large' color={colors.brand} />
+              <Text style={styles.emptyText}> No Chapters Found </Text>
             </View>
             )
           : (
@@ -88,7 +86,7 @@ const Chapters = (props) => {
                     key={chapterUUID}
                     onPress={() => {
                       if (!selectMode) {
-                        navigate('chapter', {
+                        navigate('downloads-chapters', {
                           course,
                           chapter: chapterUUID,
                         })
@@ -143,6 +141,11 @@ const Chapters = (props) => {
 
 const styles = StyleSheet.create({
   scrollContainer: { flex: 1, backgroundColor: colors.bg },
+  emptyText: {
+    color: 'white',
+    textAlign: 'center',
+    fontFamily: latoFont(),
+  },
   scrollContent: { flexGrow: 1, paddingHorizontal: 12, paddingVertical: 24 },
   chapterCard: {
     flex: 1,
