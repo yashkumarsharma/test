@@ -289,12 +289,12 @@ PODS:
     - Toast (~> 4.0.0)
   - react-native-splash-screen (3.2.0):
     - React
-  - react-native-webview (11.4.5):
-    - React-Core
   - react-native-video (5.1.1):
     - React-Core
     - react-native-video/Video (= 5.1.1)
   - react-native-video/Video (5.1.1):
+    - React-Core
+  - react-native-webview (11.4.5):
     - React-Core
   - React-perflogger (0.64.0)
   - React-RCTActionSheet (0.64.0):
@@ -360,6 +360,8 @@ PODS:
     - React-cxxreact (= 0.64.0)
     - React-jsi (= 0.64.0)
     - React-perflogger (= 0.64.0)
+  - rn-fetch-blob (0.12.0):
+    - React-Core
   - RNCAsyncStorage (1.12.1):
     - React-Core
   - RNCMaskedView (0.1.10):
@@ -403,6 +405,8 @@ PODS:
     - Yoga
   - RNScreens (3.1.1):
     - React-Core
+  - RNSVG (12.1.1):
+    - React
   - RNVectorIcons (8.1.0):
     - React-Core
   - SDWebImage (5.11.1):
@@ -460,8 +464,8 @@ DEPENDENCIES:
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - react-native-simple-toast (from `../node_modules/react-native-simple-toast`)
   - react-native-splash-screen (from `../node_modules/react-native-splash-screen`)
-  - react-native-webview (from `../node_modules/react-native-webview`)
   - react-native-video (from `../node_modules/react-native-video`)
+  - react-native-webview (from `../node_modules/react-native-webview`)
   - React-perflogger (from `../node_modules/react-native/ReactCommon/reactperflogger`)
   - React-RCTActionSheet (from `../node_modules/react-native/Libraries/ActionSheetIOS`)
   - React-RCTAnimation (from `../node_modules/react-native/Libraries/NativeAnimation`)
@@ -474,6 +478,7 @@ DEPENDENCIES:
   - React-RCTVibration (from `../node_modules/react-native/Libraries/Vibration`)
   - React-runtimeexecutor (from `../node_modules/react-native/ReactCommon/runtimeexecutor`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
+  - rn-fetch-blob (from `../node_modules/rn-fetch-blob`)
   - "RNCAsyncStorage (from `../node_modules/@react-native-community/async-storage`)"
   - "RNCMaskedView (from `../node_modules/@react-native-community/masked-view`)"
   - RNFastImage (from `../node_modules/react-native-fast-image`)
@@ -481,6 +486,7 @@ DEPENDENCIES:
   - RNPDF (from `../node_modules/react-native-view-pdf`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
+  - RNSVG (from `../node_modules/react-native-svg`)
   - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
@@ -548,10 +554,10 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-simple-toast"
   react-native-splash-screen:
     :path: "../node_modules/react-native-splash-screen"
-  react-native-webview:
-    :path: "../node_modules/react-native-webview"
   react-native-video:
     :path: "../node_modules/react-native-video"
+  react-native-webview:
+    :path: "../node_modules/react-native-webview"
   React-perflogger:
     :path: "../node_modules/react-native/ReactCommon/reactperflogger"
   React-RCTActionSheet:
@@ -576,6 +582,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/runtimeexecutor"
   ReactCommon:
     :path: "../node_modules/react-native/ReactCommon"
+  rn-fetch-blob:
+    :path: "../node_modules/rn-fetch-blob"
   RNCAsyncStorage:
     :path: "../node_modules/@react-native-community/async-storage"
   RNCMaskedView:
@@ -590,6 +598,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-reanimated"
   RNScreens:
     :path: "../node_modules/react-native-screens"
+  RNSVG:
+    :path: "../node_modules/react-native-svg"
   RNVectorIcons:
     :path: "../node_modules/react-native-vector-icons"
   Yoga:
@@ -601,7 +611,7 @@ SPEC CHECKSUMS:
   CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
   DoubleConversion: cf9b38bf0b2d048436d9a82ad2abe1404f11e7de
   FBLazyVector: 49cbe4b43e445b06bf29199b6ad2057649e4c8f5
-  FBReactNativeSpec: aab0355f85fe244387ae1ad92d834a9e23c55e56
+  FBReactNativeSpec: a6472bc1d368fab7c27e51de5ee91d4bcae3fb72
   Flipper: 1bd2db48dcc31e4b167b9a33ec1df01c2ded4893
   Flipper-DoubleConversion: 38631e41ef4f9b12861c67d17cb5518d06badc41
   Flipper-Folly: 755929a4f851b2fb2c347d533a23f191b008554c
@@ -630,8 +640,8 @@ SPEC CHECKSUMS:
   react-native-safe-area-context: e471852c5ed67eea4b10c5d9d43c1cebae3b231d
   react-native-simple-toast: b986e6c1befdc211af3df1bae293278a44e32990
   react-native-splash-screen: 200d11d188e2e78cea3ad319964f6142b6384865
-  react-native-webview: 2d2c011fdaf199da7892dd1a9d3e5a287a492409
   react-native-video: 1574074179ecaf6a9dd067116c8f31bf9fec15c8
+  react-native-webview: 2d2c011fdaf199da7892dd1a9d3e5a287a492409
   React-perflogger: 9c547d8f06b9bf00cb447f2b75e8d7f19b7e02af
   React-RCTActionSheet: 3080b6e12e0e1a5b313c8c0050699b5c794a1b11
   React-RCTAnimation: 3f96f21a497ae7dabf4d2f150ee43f906aaf516f
@@ -644,6 +654,7 @@ SPEC CHECKSUMS:
   React-RCTVibration: 0fd6b21751a33cb72fce1a4a33ab9678416d307a
   React-runtimeexecutor: cad74a1eaa53ee6e7a3620231939d8fe2c6afcf0
   ReactCommon: cfe2b7fd20e0dbd2d1185cd7d8f99633fbc5ff05
+  rn-fetch-blob: f065bb7ab7fb48dd002629f8bdcb0336602d3cba
   RNCAsyncStorage: cb9a623793918c6699586281f0b51cbc38f046f9
   RNCMaskedView: f5c7d14d6847b7b44853f7acb6284c1da30a3459
   RNFastImage: d4870d58f5936111c56218dbd7fcfc18e65b58ff
@@ -651,6 +662,7 @@ SPEC CHECKSUMS:
   RNPDF: f9dc9bac0b82da5f250df9bdd0d59b5993828fa2
   RNReanimated: b8c8004b43446e3c2709fe64b2b41072f87428ad
   RNScreens: bd1523c3bde7069b8e958e5a16e1fc7722ad0bdd
+  RNSVG: 551acb6562324b1d52a4e0758f7ca0ec234e278f
   RNVectorIcons: 31cebfcf94e8cf8686eb5303ae0357da64d7a5a4
   SDWebImage: a7f831e1a65eb5e285e3fb046a23fcfbf08e696d
   SDWebImageWebPCoder: d0dac55073088d24b2ac1b191a71a8f8d0adac21
@@ -658,6 +670,6 @@ SPEC CHECKSUMS:
   Yoga: 8c8436d4171c87504c648ae23b1d81242bdf3bbf
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: 9bf5b2a0ee4e8ca84bc297ab754876f41895d55c
+PODFILE CHECKSUM: cd20ce7be463f3b4285b46663d4f6552fd4aa88d
 
 COCOAPODS: 1.10.1
