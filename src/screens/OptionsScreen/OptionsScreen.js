@@ -1,4 +1,4 @@
-import React, { useCallback, useContext } from 'react'
+import React, { useCallback, useContext, useState } from 'react'
 import {
   Linking,
   ScrollView,
@@ -10,23 +10,54 @@ import {
 } from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import AntIcon from 'react-native-vector-icons/AntDesign'
+import { ConfirmDialog } from 'react-native-simple-dialogs'
 
 import { AppContext } from '../../components/ContextProvider/ContextProvider'
 import colors from '../../assets/colors'
-import { latoFont } from '../../utilities/utilsFunctions'
+import { latoFont, getPrettySize } from '../../utilities/utilsFunctions'
 
 const OptionsScreen = () => {
-  const { onSignOut } = useContext(AppContext)
+  const {
+    onSignOut,
+    downloads,
+    deleteDownloadsData,
+  } = useContext(AppContext)
+  const [dialogVisible, setDialogVisible] = useState(false)
+  const [dialogMessage, setDialogMessage] = useState('')
+  const [dialogAction, setDialogAction] = useState()
+
+  const downloadedSize = useCallback(() => {
+    let totalDownload = 0
+    for (const courseId in downloads) {
+      totalDownload += downloads[courseId]?.size || 0
+    }
+    return totalDownload
+  }, [downloads])
+
+  const deleteDownload = () => {
+    // Remove all files
+    deleteDownloadsData()
+    setDialogVisible(false)
+  }
+
+  const onDeleteDownload = () => {
+    setDialogMessage('Do you want to delete all downloaded resources?')
+    setDialogVisible(true)
+    setDialogAction(() => deleteDownload)
+  }
 
   const renderDownloadOptionRow = useCallback(() => {
-    const downloadedSize = '2.65 GB' // Todo: Fetch from context
+    const downloadedBytes = downloadedSize()
+    const size = getPrettySize(downloadedBytes)
     return (
       <View style={[styles.row, styles.downloadRow]}>
-        <Text style={styles.rowText}>{downloadedSize} Downloaded</Text>
-        <Icon name={'delete-outline'} size={20} color={colors.link} />
+        <Text style={styles.rowText}>{size} Downloaded</Text>
+        {downloadedBytes > 0 && (
+          <Icon onPress={onDeleteDownload} name={'delete-outline'} size={20} color={colors.link} />
+        )}
       </View>
     )
-  }, [])
+  }, [downloads])
 
   const renderVersionOptionRow = useCallback(() => {
     // Todo: Check if update is available.
@@ -70,15 +101,43 @@ const OptionsScreen = () => {
     )
   }, [])
 
+  const signOut = () => {
+    onSignOut()
+    setDialogVisible(false)
+  }
+
+  const onSignOutPress = () => {
+    setDialogMessage('Do you want to Sign Out?')
+    setDialogVisible(true)
+    setDialogAction(() => signOut)
+  }
+
   const renderSignOut = useCallback(
     () => (
       <View style={styles.signOut}>
-        <Text onPress={onSignOut} style={[styles.signOutText]}>
+        <Text onPress={onSignOutPress} style={[styles.signOutText]}>
           Sign Out
         </Text>
       </View>
     ),
     [],
+  )
+
+  const renderConfirmationDialog = () => (
+    <ConfirmDialog
+      title={dialogMessage}
+      message=''
+      visible={dialogVisible}
+      onTouchOutside={() => setDialogVisible(false)}
+      positiveButton={{
+        title: 'YES',
+        onPress: dialogAction,
+      }}
+      negativeButton={{
+        title: 'NO',
+        onPress: () => setDialogVisible(false),
+      }}
+    />
   )
 
   return (
@@ -111,6 +170,7 @@ const OptionsScreen = () => {
       {renderTermsOfUseRow()}
       {renderPrivacyPolicyRow()}
       {renderSignOut()}
+      {renderConfirmationDialog()}
     </ScrollView>
   )
 }

@@ -15,7 +15,6 @@ import { latoFont } from '../../utilities/utilsFunctions'
 function HeaderComponent (props) {
   const { scene, previous, navigation: { goBack } } = props
 
-  console.log('props...header....', props)
   const progress = Animated.add(
     scene.progress.current,
     scene.progress.next || 0,

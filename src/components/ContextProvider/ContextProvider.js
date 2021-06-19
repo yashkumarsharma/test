@@ -106,6 +106,11 @@ const ContextProvider = ({ children }) => {
     await AsyncStorage.setItem('downloads', JSON.stringify(updatedData))
   }
 
+  const deleteDownloadsData = async data => {
+    dispatch({ type: 'SET_DOWNLOADS_DATA', data: {} })
+    await AsyncStorage.setItem('downloads', JSON.stringify({}))
+  }
+
   const removeCourseFromDownloads = async selectedCourses => {
     const data = omit(state.downloads, selectedCourses)
 
@@ -144,6 +149,7 @@ const ContextProvider = ({ children }) => {
         removeCourseFromDownloads,
         removeChaptersFromDownloads,
         removeSectionsFromDownloads,
+        deleteDownloadsData,
       }}>
       {children}
     </AppContext.Provider>
