@@ -12,32 +12,42 @@ import PropTypes from 'prop-types'
 import CheckBox from 'react-native-check-box'
 import FastImage from 'react-native-fast-image'
 
+import AsyncStorage from '@react-native-community/async-storage'
 import colors from '../../assets/colors'
 import Download from '../../assets/icons/Download.png'
-import Play from '../../assets/icons/Play.png'
+import Play from '../../assets/icons/Play.svg'
 import { AppContext } from '../../components/ContextProvider/ContextProvider'
 import ResourceHeader from '../../components/ResourceHeader/ResourceHeader'
 import ResourceFooter from '../../components/ResourceFooter/ResourceFooter'
 import { useSelect } from '../../hooks/useSelect'
 import { latoFont, getPrettySize } from '../../utilities/utilsFunctions'
 import { getVideoDurationString } from '../../utilities/dateTimeUtils'
+import DownloadCancel from '../../assets/icons/DownloadCancel.svg'
+import CircularProgress from '../../components/CircularProgress/CircularProgress'
 
 const Sections = (props) => {
   const {
     course: { id: courseUUID },
     chapter: chapterId,
   } = props?.route.params
+
+  const {
+    navigation: { navigate },
+  } = props
   const [displayedSections, setDisplayedSections] = useState([])
   const [selectMode, setSelectMode] = useState('')
   const { selectedOptions, reset, add, remove, isSelected } = useSelect([])
   const {
     downloads = {},
     removeSectionsFromDownloads,
+    downloadQueue,
+    currentDownload,
   } = useContext(AppContext)
 
   const sections = downloads?.[courseUUID]?.chapters?.[chapterId].sections || {}
   const sectionIds = Object.keys(sections)
-  const chapterName = downloads?.[courseUUID]?.chapters?.[chapterId]?.title || ''
+  const chapterName =
+    downloads?.[courseUUID]?.chapters?.[chapterId]?.title || ''
 
   const isAllSelected = sectionIds?.length === selectedOptions.length
 
@@ -60,8 +70,33 @@ const Sections = (props) => {
     // Todo: Delete local files
 
     // Remove from context
-    removeSectionsFromDownloads(courseUUID, chapterId, selectedOptions)
+    removeSectionsFromDownloads(
+      courseUUID,
+      chapterId,
+      selectedOptions,
+      getVideosList(),
+    )
     // reset()
+  }
+
+  const getVideosList = () => {
+    let videosList = []
+    selectedOptions.forEach((selectedSection) => {
+      videosList = [
+        ...videosList,
+        ...Object.keys(sections[selectedSection]?.videos),
+      ]
+    })
+    return videosList
+  }
+
+  const getVideoIcon = (video) => {
+    const videoStatus = downloadQueue?.includes(
+      video?.kaltura_embed_code || video?.kalturaEmbedCode,
+    )
+
+    if (videoStatus) return { Icon: DownloadCancel, status: 'DOWNLOADING' }
+    return { Icon: Play, status: 'DOWNLOADED' }
   }
 
   return (
@@ -69,85 +104,91 @@ const Sections = (props) => {
       <ScrollView
         style={styles.scrollContainer}
         contentContainerStyle={styles.scrollContent}>
-        {!sectionIds?.length > 0
-          ? (
-              <View style={{ justifyContent: 'center', flexGrow: 1 }}>
-                <Text style={styles.emptyText}> No Sections Found </Text>
-              </View>
-            )
-          : (
-            <View style={styles.container}>
-              <ResourceHeader
-                selectMode={selectMode}
-                isAllSelected={isAllSelected}
-                title={chapterName.split(':')[0]}
-                onPress={headerButtonPress}
-                checkboxPress={checkboxPress}
-              />
-              {Object.keys(sections).map((sectionId, secIndex) => {
-                const videos = Object.values(sections[sectionId]?.videos) || []
-                const selected = isSelected(sectionId)
-                const isOpen = displayedSections[secIndex]
-                return (
-                  <View key={secIndex} style={styles.sectionContainer}>
-                    <Pressable
-                      onPress={() => {
-                        if (selectMode) {
-                          selected
-                            ? remove(secIndex)
-                            : add(secIndex)
-                        } else {
-                          const newArray = [...displayedSections]
-                          newArray[secIndex] = !newArray[secIndex]
-                          setDisplayedSections(newArray)
-                        }
-                      }}
-                      style={{
-                        ...styles.sectionTitlePressable,
-                        marginBottom: isOpen ? 19 : 0,
-                      }}>
-                      <View style={{ flex: 1 }}>
-                        <Text style={styles.sectionTitle}>
-                          {sections[sectionId]?.title || ''}
-                        </Text>
-                        <Text
-                          style={{
-                            ...styles.downloadText,
-                            marginLeft: 0,
-                            marginTop: 6,
-                          }}>
-                          {getPrettySize(sections[sectionId]?.size || 0)}
-                        </Text>
-                      </View>
-                      {selectMode
-                        ? (
-                            <CheckBox
-                              onClick={() => {
-                                selected
-                                  ? remove(sectionId)
-                                  : add(sectionId)
-                              }}
-                              isChecked={selected}
-                              checkBoxColor={colors.brand}
-                            />
-                          )
-                        : (
-                            <Icon
-                              name={isOpen ? 'chevron-thin-up' : 'chevron-thin-down'}
-                              size={16}
-                              color='white'
-                            />
-                          )}
-                    </Pressable>
-                    {isOpen &&
-                      videos?.map((video, videoIndex) => (
-                        <View
+        {!sectionIds?.length > 0 ? (
+          <View style={{ justifyContent: 'center', flexGrow: 1 }}>
+            <Text style={styles.emptyText}> No Sections Found </Text>
+          </View>
+        ) : (
+          <View style={styles.container}>
+            <ResourceHeader
+              selectMode={selectMode}
+              isAllSelected={isAllSelected}
+              title={chapterName.split(':')[0]}
+              onPress={headerButtonPress}
+              checkboxPress={checkboxPress}
+            />
+            {Object.keys(sections).map((sectionId, secIndex) => {
+              const videos = Object.values(sections[sectionId]?.videos) || []
+              const selected = isSelected(sectionId)
+              const isOpen = displayedSections[secIndex]
+              return (
+                <View key={secIndex} style={styles.sectionContainer}>
+                  <Pressable
+                    onPress={() => {
+                      if (selectMode) {
+                        selected ? remove(secIndex) : add(secIndex)
+                      } else {
+                        const newArray = [...displayedSections]
+                        newArray[secIndex] = !newArray[secIndex]
+                        setDisplayedSections(newArray)
+                      }
+                    }}
+                    style={{
+                      ...styles.sectionTitlePressable,
+                      marginBottom: isOpen ? 19 : 0,
+                    }}>
+                    <View style={{ flex: 1 }}>
+                      <Text style={styles.sectionTitle}>
+                        {sections[sectionId]?.title || ''}
+                      </Text>
+                      <Text
+                        style={{
+                          ...styles.downloadText,
+                          marginLeft: 0,
+                          marginTop: 6,
+                        }}>
+                        {getPrettySize(sections[sectionId]?.size || 0)}
+                      </Text>
+                    </View>
+                    {selectMode ? (
+                      <CheckBox
+                        onClick={() => {
+                          selected ? remove(sectionId) : add(sectionId)
+                        }}
+                        isChecked={selected}
+                        checkBoxColor={colors.brand}
+                      />
+                    ) : (
+                      <Icon
+                        name={isOpen ? 'chevron-thin-up' : 'chevron-thin-down'}
+                        size={16}
+                        color='white'
+                      />
+                    )}
+                  </Pressable>
+                  {isOpen &&
+                    videos?.map((video, videoIndex) => {
+                      const { Icon, status } = getVideoIcon(video)
+                      const isCurrent =
+                        currentDownload?.video ===
+                        (video?.kaltura_embed_code || video?.kalturaEmbedCode)
+                      return (
+                        <Pressable
                           key={videoIndex}
                           style={{
                             flexDirection: 'row',
                             alignItems: 'flex-start',
                             marginBottom:
                               videoIndex === videos.length - 1 ? 0 : 21,
+                          }}
+                          onPress={async () => {
+                            const videoFile = await AsyncStorage.getItem(
+                              video?.kaltura_embed_code ||
+                                video?.kalturaEmbedCode,
+                            )
+                            if (videoFile) {
+                              navigate('video', { video, videoFile })
+                            }
                           }}>
                           <View
                             style={{
@@ -155,7 +196,10 @@ const Sections = (props) => {
                               justifyContent: 'center',
                             }}>
                             <FastImage
-                              style={styles.thumbnail}
+                              style={{
+                                ...styles.thumbnail,
+                                opacity: status !== 'DOWNLOADED' ? 0.2 : 1,
+                              }}
                               source={{
                                 uri: `https://cdnsecakmi.kaltura.com/p/2654411/thumbnail/entry_id/${
                                   video?.kaltura_embed_code ||
@@ -163,35 +207,49 @@ const Sections = (props) => {
                                 }`,
                               }}
                             />
-                            <Image
+                            <Pressable
                               style={{
                                 position: 'absolute',
                                 height: 24,
                                 width: 24,
-                              }}
-                              source={Play}
-                            />
+                              }}>
+                              <Icon />
+                              {isCurrent && (
+                                <CircularProgress
+                                  progress={currentDownload.progress}
+                                />
+                              )}
+                            </Pressable>
                           </View>
                           <View style={{ flex: 1 }}>
-                            <Text style={styles.videoTitle}>{video?.title}</Text>
+                            <Text style={styles.videoTitle}>
+                              {video?.title}
+                            </Text>
                             <View style={styles.downloadContainer}>
-                              <Image
-                                source={Download}
-                                style={styles.downloadImage}
-                              />
-                              <Text style={styles.downloadText}>{getPrettySize(video.size)}</Text>
+                              {status === 'DOWNLOADED' && (
+                                <>
+                                  <Image
+                                    source={Download}
+                                    style={styles.downloadImage}
+                                  />
+                                  <Text style={styles.downloadText}>
+                                    {getPrettySize(video.size)}
+                                  </Text>
+                                </>
+                              )}
                               <Text style={styles.downloadText}>
                                 {getVideoDurationString(video?.duration)}
                               </Text>
                             </View>
                           </View>
-                        </View>
-                      ))}
-                  </View>
-                )
-              })}
-              </View>
-            )}
+                        </Pressable>
+                      )
+                    })}
+                </View>
+              )
+            })}
+          </View>
+        )}
       </ScrollView>
       <ResourceFooter
         selectMode={selectMode}
@@ -235,8 +293,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-  downloadImage: { height: 12, width: 12 },
-  downloadText: { fontFamily: latoFont(), color: '#B1BFC5', marginLeft: 8 },
+  downloadImage: { height: 12, width: 12, marginRight: 8 },
+  downloadText: { fontFamily: latoFont(), color: '#B1BFC5', marginRight: 8 },
   icon: { height: 16, width: 8 },
   lockIcon: { height: 16, width: 12 },
   thumbnail: { height: 68, width: 120, marginRight: 12 },
@@ -263,6 +321,7 @@ Sections.propTypes = {
   route: PropTypes.shape({
     params: PropTypes.objectOf(PropTypes.any),
   }),
+  navigation: PropTypes.objectOf(PropTypes.func),
 }
 
 export default Sections

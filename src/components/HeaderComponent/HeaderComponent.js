@@ -12,8 +12,12 @@ import colors from '../../assets/colors'
 import Caret from '../../assets/icons/Caret.png'
 import { latoFont } from '../../utilities/utilsFunctions'
 
-function HeaderComponent (props) {
-  const { scene, previous, navigation: { goBack } } = props
+function HeaderComponent(props) {
+  const {
+    scene,
+    previous,
+    navigation: { goBack },
+  } = props
 
   const progress = Animated.add(
     scene.progress.current,
@@ -31,7 +35,11 @@ function HeaderComponent (props) {
         {previous ? (
           <TouchableOpacity onPress={goBack} style={styles.PreviousContainer}>
             <Image source={Caret} style={styles.PreviousIcon} />
-            <Text style={styles.PreviousText}>{previous?.descriptor?.options?.headerTitle || previous?.route?.title || previous?.route?.name}</Text>
+            <Text style={styles.PreviousText}>
+              {previous?.descriptor?.options?.headerTitle ||
+                previous?.route?.title ||
+                previous?.route?.name}
+            </Text>
           </TouchableOpacity>
         ) : (
           <Text style={styles.titleText}>{scene?.route?.name}</Text>

@@ -1,4 +1,4 @@
-export default function reducer (state, action) {
+export default function reducer(state, action) {
   switch (action.type) {
     case 'FETCH_USER_SUCCESS':
       return {
@@ -45,6 +45,17 @@ export default function reducer (state, action) {
       return {
         ...state,
         downloads: action.data,
+        downloadQueue: action.downloadQueue,
+      }
+    case 'SET_CURRENT_DOWNLOAD':
+      return {
+        ...state,
+        currentDownload: action.data,
+      }
+    case 'UPDATE_DOWNLOAD_QUEUE':
+      return {
+        ...state,
+        downloadQueue: action.data,
       }
     default:
       return new Error()

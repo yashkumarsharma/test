@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useRef, useState, useEffect } from 'react'
 import {
   View,
   Text,
@@ -13,6 +13,7 @@ import PropTypes from 'prop-types'
 import Video from 'react-native-video'
 import Icon from 'react-native-vector-icons/Entypo'
 import PDFView from 'react-native-view-pdf'
+import AsyncStorage from '@react-native-community/async-storage'
 import colors from '../../assets/colors'
 import { latoFont } from '../../utilities/utilsFunctions'
 import VideoPlayer from '../../components/VideoPlayer/VideoPlayer'
@@ -20,7 +21,7 @@ import VideoPlayer from '../../components/VideoPlayer/VideoPlayer'
 const screenWidth = Math.round(Dimensions.get('window').width)
 
 const VideoScreen = ({ route }) => {
-  const { video } = route.params
+  const { video, videoFile } = route.params
   const [document, setDocument] = useState('')
   const videoRef = useRef()
 
@@ -44,13 +45,12 @@ const VideoScreen = ({ route }) => {
             ref={videoRef}
             onLoad={load}
             source={{
-              uri:
-                'https://file-examples-com.github.io/uploads/2017/04/file_example_MP4_480_1_5MG.mp4',
+              uri: videoFile,
             }}
             style={styles.backgroundVideo}
           />
         ) : (
-          <VideoPlayer />
+          <VideoPlayer videoFile={videoFile} />
         )}
         {Platform.OS === 'ios' && (
           <Text style={styles.videoDuration}>{video?.duration}</Text>

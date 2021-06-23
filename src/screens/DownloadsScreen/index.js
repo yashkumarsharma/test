@@ -5,6 +5,7 @@ import { createStackNavigator } from '@react-navigation/stack'
 
 import HeaderComponent from '../../components/HeaderComponent/HeaderComponent'
 import { horizontalTransition } from '../../utilities/navigationUtils'
+import VideoScreen from '../MyCourses/VideoScreen'
 import Courses from './Courses'
 import Chapters from './Chapters'
 import Sections from './Sections'
@@ -45,6 +46,14 @@ const Downloads = () => {
       <Stack.Screen
         name='downloads-chapters'
         component={Sections}
+        options={{
+          header: HeaderComponent,
+        }}
+      />
+
+      <Stack.Screen
+        name='downloads-video'
+        component={VideoScreen}
         options={{
           header: HeaderComponent,
         }}

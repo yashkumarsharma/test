@@ -22,7 +22,7 @@ export const login = async (username, password) => {
   }
 }
 
-export async function getStudentCourses () {
+export async function getStudentCourses() {
   try {
     const { data } = await getApi('/student/courses')
     return data
@@ -31,19 +31,19 @@ export async function getStudentCourses () {
   }
 }
 
-export async function loadSectionData (activeCourseUUID, uuid) {
+export async function loadSectionData(activeCourseUUID, uuid) {
   const url = getUrl(activeCourseUUID, uuid)
   const { data } = await getApi(url)
   return data
 }
 
-export async function getCourseData (courseUuid) {
+export async function getCourseData(courseUuid) {
   const url = getUrl(courseUuid)
   const { data } = await getApi(url)
   return data
 }
 
-export async function setMyScriptData (id, body) {
+export async function setMyScriptData(id, body) {
   try {
     const { data } = await postApi(`/my-script/${id}`, body)
     return data
@@ -52,7 +52,7 @@ export async function setMyScriptData (id, body) {
   }
 }
 
-export async function getMyScriptData () {
+export async function getMyScriptData() {
   const { data } = await getApi('/my-script')
   return data
 }

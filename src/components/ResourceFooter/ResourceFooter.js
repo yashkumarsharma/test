@@ -5,7 +5,7 @@ import { latoFont, getPrettySize } from '../../utilities/utilsFunctions'
 import RemoveFile from '../../assets/icons/RemoveFileBrand.png'
 import DownloadFile from '../../assets/icons/FileDownloadBrand.png'
 
-function ResourceFooter ({
+function ResourceFooter({
   selectMode,
   selectedOptions,
   downloadFiles,
@@ -15,7 +15,9 @@ function ResourceFooter ({
   if (selectedOptions?.length > 0) {
     return (
       <View style={styles.selectedContainer}>
-        <Text style={styles.selectedText}>Selected: {getPrettySize(selectedSize)}</Text>
+        <Text style={styles.selectedText}>
+          Selected: {getPrettySize(selectedSize)}
+        </Text>
         <Pressable
           onPress={selectMode === 'remove' ? removeFiles : downloadFiles}>
           <Image

@@ -7,7 +7,7 @@ import colors from '../../assets/colors'
 
 const screenHeight = Dimensions.get('screen').height
 
-const VideoPlayer = () => {
+const VideoPlayer = ({ videoFile }) => {
   const videoPlayer = useRef(null)
   const [duration, setDuration] = useState(0)
   const [paused, setPaused] = useState(true)
@@ -96,8 +96,7 @@ const VideoPlayer = () => {
         ref={(ref) => (videoPlayer.current = ref)}
         resizeMode={'cover'}
         source={{
-          uri:
-            'https://file-examples-com.github.io/uploads/2017/04/file_example_MP4_480_1_5MG.mp4',
+          uri: videoFile,
         }}
         style={
           !isFullScreen

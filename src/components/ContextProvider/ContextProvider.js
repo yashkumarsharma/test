@@ -1,10 +1,15 @@
-import React, { createContext, useReducer, useEffect } from 'react'
+import React, { createContext, useReducer, useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import AsyncStorage from '@react-native-community/async-storage'
 import merge from 'lodash/merge'
 import omit from 'lodash/omit'
-
-import { getStudentCourses } from '../../utilities/api'
+import { downloadsStatus } from '../../constants'
+import { loadUser, getCourses, setUser, onSignOut } from './userActions'
+import {
+  downloadVideo,
+  loadDownloadsData,
+  updateDownloadsSize,
+} from './downloadsActions'
 import reducer from './reducer'
 
 export const AppContext = createContext()
@@ -18,92 +23,85 @@ const ContextProvider = ({ children }) => {
       data: [],
     },
     downloads: {},
+    downloadQueue: [],
+    currentDownload: {
+      video: null,
+      progress: 0,
+    },
   }
+
+  const [downloadStatus, setStatus] = useState(downloadsStatus.IDLE)
 
   const [state, dispatch] = useReducer(reducer, initialState)
 
   useEffect(() => {
-    loadUser()
-    loadDownloadsData()
+    loadUser(dispatch)
+    loadDownloadsData(dispatch)
   }, [])
 
-  const getCourses = async () => {
-    dispatch({ type: 'FETCH_COURSES_START' })
-    const { courses } = await getStudentCourses()
-    dispatch({ type: 'FETCH_COURSES_SUCCESS', courses })
-  }
-
-  const loadUser = async () => {
-    try {
-      const storedUser = await AsyncStorage.getItem('user')
-      if (storedUser) {
-        const user = JSON.parse(storedUser)
-        dispatch({ type: 'FETCH_USER_SUCCESS', user })
-        getCourses()
-      } else {
-        dispatch({ type: 'FETCH_USER_FAIL' })
-      }
-    } catch (err) {
-      console.warn('Error while fetching user from Asycnstorage')
+  useEffect(() => {
+    if (
+      downloadStatus !== downloadsStatus.STARTED &&
+      state?.downloadQueue?.length > 0
+    ) {
+      downloadVideo(state.downloadQueue[0], setStatus, dispatch)
     }
-  }
+  }, [state.downloadQueue])
 
-  const setUser = (user) => {
-    dispatch({ type: 'SET_USER', user })
-    getCourses()
-  }
-
-  const onSignOut = async () => {
-    await AsyncStorage.removeItem('user')
-    dispatch({ type: 'SIGN_OUT' })
-  }
-
-  const loadDownloadsData = async () => {
-    try {
-      const storedData = await AsyncStorage.getItem('downloads')
-      if (storedData) {
-        const data = JSON.parse(storedData)
-        dispatch({ type: 'SET_DOWNLOADS_DATA', data })
-      }
-    } catch (err) {
-      console.warn('Error while fetching downloads data from Asycnstorage')
+  useEffect(() => {
+    if (downloadStatus === downloadsStatus.DONE) {
+      removeFromDownloadQueue(state.downloadQueue[0])
+      setStatus(downloadsStatus.IDLE)
     }
-  }
+  }, [downloadStatus])
 
-  const updateDownloadsSize = data => {
-    // Data will be present on last level
-    // Sum it up and update the parent nodes
-    for (const [courseId, course] of Object.entries(data)) {
-      const chapters = course.chapters
-      let courseSize = 0
-      for (const [chapterId, chapter] of Object.entries(chapters)) {
-        const sections = chapter.sections
-        let chapterSize = 0
-        for (const [sectionId, section] of Object.entries(sections)) {
-          const videos = section.videos
-          let sectionSize = 0
-          for (const [videoId, video] of Object.entries(videos)) {
-            console.log('videoId', videoId)
-            sectionSize += video.size
-          }
-          sections[sectionId].size = sectionSize
-          chapterSize += sectionSize
-        }
-        chapters[chapterId].size = chapterSize
-        courseSize += chapterSize
-      }
-      data[courseId].size = courseSize
+  const removeFromDownloadQueue = async (id) => {
+    let newDownloadQueue = []
+
+    if (Array.isArray(id)) {
+      newDownloadQueue = state.downloadQueue.filter(
+        (entryId) => !id.includes(entryId),
+      )
+    } else {
+      newDownloadQueue = state.downloadQueue.filter((entryId) => entryId !== id)
     }
-    return data
+    dispatch({
+      type: 'SET_CURRENT_DOWNLOAD',
+      data: {
+        video: null,
+        progress: 0,
+      },
+    })
+    dispatch({ type: 'UPDATE_DOWNLOAD_QUEUE', data: newDownloadQueue })
+    await AsyncStorage.setItem(
+      'downloadQueue',
+      JSON.stringify(newDownloadQueue),
+    )
   }
 
-  const addDownloadsData = async data => {
+  const addDownloadsData = async (data, entries) => {
     const stateData = merge(state.downloads, data)
+    let newDownloadsQueue = state.downloadQueue
+
+    if (!state.downloadQueue.includes(...entries)) {
+      newDownloadsQueue =
+        state.downloadQueue.length > 0
+          ? [...state.downloadQueue, ...entries]
+          : entries
+    }
 
     const updatedData = updateDownloadsSize(stateData)
 
-    dispatch({ type: 'SET_DOWNLOADS_DATA', data: updatedData })
+    dispatch({
+      type: 'SET_DOWNLOADS_DATA',
+      data: updatedData,
+      downloadQueue: newDownloadsQueue,
+    })
     await AsyncStorage.setItem('downloads', JSON.stringify(updatedData))
+    await AsyncStorage.setItem(
+      'downloadQueue',
+      JSON.stringify(newDownloadsQueue),
+    )
   }
 
   const deleteDownloadsData = async data => {
@@ -128,23 +126,37 @@ const ContextProvider = ({ children }) => {
     await AsyncStorage.setItem('downloads', JSON.stringify(data))
   }
 
-  const removeSectionsFromDownloads = async (courseId, chapterId, selectedSections) => {
+  const removeSectionsFromDownloads = async (
+    courseId,
+    chapterId,
+    selectedSections,
+    videoList,
+  ) => {
     const downloads = { ...state.downloads }
-    const sectionsData = omit(downloads[courseId].chapters[chapterId].sections, selectedSections)
+    const sectionsData = omit(
+      downloads[courseId].chapters[chapterId].sections,
+      selectedSections,
+    )
     downloads[courseId].chapters[chapterId].sections = sectionsData
     const data = updateDownloadsSize(downloads)
 
     dispatch({ type: 'SET_DOWNLOADS_DATA', data })
     await AsyncStorage.setItem('downloads', JSON.stringify(data))
+
+    removeFromDownloadQueue(videoList)
+
+    for (let i = 0; i < videoList.length; i++) {
+      await AsyncStorage.removeItem(videoList[i])
+    }
   }
 
   return (
     <AppContext.Provider
       value={{
         ...state,
-        setUser: setUser,
-        getCourses,
-        onSignOut,
+        setUser: (user) => setUser(user, dispatch),
+        getCourses: () => getCourses(dispatch),
+        onSignOut: () => onSignOut(dispatch),
         addDownloadsData,
         removeCourseFromDownloads,
         removeChaptersFromDownloads,
