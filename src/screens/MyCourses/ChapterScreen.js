@@ -114,6 +114,7 @@ const ChapterScreen = ({ route, navigation: { navigate } }) => {
     const chapter = route?.params?.chapter || {}
     const chapterTitle = `Chapter ${index + 1}: ${chapter.title || ''}`
 
+    console.log(video, '----', courseTitle, '----')
     if (!video) {
       // const sectionTitle = `${index + 1}.${secIndex + 1}: ${section.title || ''}`
       // The structure is kept generic and it is required for Downloads functionality.
@@ -155,6 +156,12 @@ const ChapterScreen = ({ route, navigation: { navigate } }) => {
           },
         },
       }
+      console.log(
+        downloadsObject,
+        '-------object-----',
+        getVideosList(),
+        '-------list-------',
+      )
       addDownloadsData(downloadsObject, getVideosList())
 
       reset()

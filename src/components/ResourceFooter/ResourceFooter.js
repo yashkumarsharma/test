@@ -19,7 +19,9 @@ function ResourceFooter({
           Selected: {getPrettySize(selectedSize)}
         </Text>
         <Pressable
-          onPress={selectMode === 'remove' ? removeFiles : downloadFiles}>
+          onPress={() =>
+            selectMode === 'remove' ? removeFiles() : downloadFiles()
+          }>
           <Image
             source={selectMode === 'remove' ? RemoveFile : DownloadFile}
             style={{ height: 24 }}

@@ -38,3 +38,7 @@ export const getPrettySize = (number) => {
   const size = (number / Math.pow(1024, exponent)).toPrecision(3)
   return `${size} ${UNITS[exponent]}`
 }
+
+export const arrayDiff = (arr1, arr2 = []) => {
+  return arr1.filter((x) => !arr2.includes(x))
+}

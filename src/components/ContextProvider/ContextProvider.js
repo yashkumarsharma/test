@@ -4,6 +4,7 @@ import AsyncStorage from '@react-native-community/async-storage'
 import merge from 'lodash/merge'
 import omit from 'lodash/omit'
 import { downloadsStatus } from '../../constants'
+import { arrayDiff } from '../../utilities/utilsFunctions'
 import { loadUser, getCourses, setUser, onSignOut } from './userActions'
 import {
   downloadVideo,
@@ -81,14 +82,12 @@ const ContextProvider = ({ children }) => {
 
   const addDownloadsData = async (data, entries) => {
     const stateData = merge(state.downloads, data)
-    let newDownloadsQueue = state.downloadQueue
+    let newDownloadsQueue = arrayDiff(entries, state?.downloadQueue)
 
-    if (!state.downloadQueue.includes(...entries)) {
-      newDownloadsQueue =
-        state.downloadQueue.length > 0
-          ? [...state.downloadQueue, ...entries]
-          : entries
-    }
+    newDownloadsQueue =
+      state.downloadQueue.length > 0
+        ? [...state.downloadQueue, ...newDownloadsQueue]
+        : newDownloadsQueue
 
     const updatedData = updateDownloadsSize(stateData)
 
@@ -104,12 +103,12 @@ const ContextProvider = ({ children }) => {
     )
   }
 
-  const deleteDownloadsData = async data => {
+  const deleteDownloadsData = async (data) => {
     dispatch({ type: 'SET_DOWNLOADS_DATA', data: {} })
     await AsyncStorage.setItem('downloads', JSON.stringify({}))
   }
 
-  const removeCourseFromDownloads = async selectedCourses => {
+  const removeCourseFromDownloads = async (selectedCourses) => {
     const data = omit(state.downloads, selectedCourses)
 
     dispatch({ type: 'SET_DOWNLOADS_DATA', data })

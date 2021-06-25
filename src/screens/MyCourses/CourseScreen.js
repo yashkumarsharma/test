@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import {
   View,
   Text,
@@ -10,7 +10,7 @@ import {
 } from 'react-native'
 import PropTypes from 'prop-types'
 import CheckBox from 'react-native-check-box'
-import { getCourseData } from '../../utilities/api'
+import { getCourseData, loadSectionData } from '../../utilities/api'
 import colors from '../../assets/colors'
 import { latoFont } from '../../utilities/utilsFunctions'
 import Vector from '../../assets/icons/Vector.png'
@@ -31,6 +31,7 @@ import ModalComponent from '../../components/ModalComponent/ModalComponent'
 import { useSelect } from '../../hooks/useSelect'
 import ResourceHeader from '../../components/ResourceHeader/ResourceHeader'
 import ResourceFooter from '../../components/ResourceFooter/ResourceFooter'
+import { AppContext } from '../../components/ContextProvider/ContextProvider'
 
 const CourseScreen = ({ route, navigation: { navigate } }) => {
   const {
@@ -43,6 +44,8 @@ const CourseScreen = ({ route, navigation: { navigate } }) => {
   const [modalVisible, setModalVisible] = useState(false)
   const [selectMode, setSelectMode] = useState('')
   const { selectedOptions, reset, add, remove, isSelected } = useSelect([])
+  const context = useContext(AppContext)
+  const { addDownloadsData } = context
 
   const getCourseChapters = async () => {
     const { chapters } = await getCourseData(courseUUID)
@@ -79,6 +82,94 @@ const CourseScreen = ({ route, navigation: { navigate } }) => {
   }
 
   const currentDate = secondsSinceEpoch()
+
+  const downloadChapter = async (chapter) => {
+    const courseTitle = route?.params?.course?.displayName
+
+    const data = await Promise.all(
+      chapter?.sections?.map((section) => {
+        return loadSectionData(courseUUID, section?.section_uuid)
+      }),
+    )
+
+    return data
+  }
+
+  const triggerDownload = () => {
+    const selectedChapters = chapters.filter(({ chapter_uuid: chapterUUID }) =>
+      selectedOptions.includes(chapterUUID),
+    )
+
+    selectedChapters.forEach(async (chapter) => {
+      const chapterSectionsData = await downloadChapter(chapter)
+      downloadSection(
+        chapter,
+        chapterSectionsData,
+        getVideosList(chapterSectionsData),
+      )
+    })
+  }
+
+  const getVideosList = (sections) => {
+    let videosList = []
+    sections.forEach((section) => {
+      const videos =
+        section?.section_exe?.multi_lecture_videos?.videos ||
+        section?.section_exe?.lecture?.lecturevideos
+
+      videosList = [
+        ...videosList,
+        ...videos.map((v) => v.kaltura_embed_code || v.kalturaEmbedCode),
+      ]
+    })
+    return videosList
+  }
+
+  const downloadSection = (chap, sections, videosList) => {
+    const courseTitle = route?.params?.course?.displayName
+    const chapterIndex = chapters.findIndex(
+      (c) => c?.chapter_uuid === chap?.chapter_uuid,
+    )
+    const chapterTitle = `Chapter ${chapterIndex + 1}: ${chap.title || ''}`
+
+    const sectionsList = {}
+
+    sections.forEach((section, idx) => {
+      sectionsList[section?.section_uuid] = {
+        title: `${chapterIndex + 1}.${idx + 1}: ${section.title || ''}`,
+        videos: {},
+      }
+
+      const videos =
+        section?.section_exe?.multi_lecture_videos?.videos ||
+        section?.section_exe?.lecture?.lecturevideos
+
+      for (let j = 0; j < videos.length; j++) {
+        sectionsList[section?.section_uuid].videos[
+          videos[j].kaltura_embed_code || videos[j].kalturaEmbedCode
+        ] = {
+          ...videos[j],
+          size: 456000,
+        }
+      }
+    })
+
+    const downloadsObject = {
+      [courseUUID]: {
+        title: courseTitle,
+        chapters: {
+          [chap.chapter_uuid]: {
+            title: chapterTitle,
+            sections: sectionsList,
+          },
+        },
+      },
+    }
+    addDownloadsData(downloadsObject, videosList)
+
+    reset()
+    setSelectMode('')
+  }
 
   return (
     <>
@@ -167,6 +258,7 @@ const CourseScreen = ({ route, navigation: { navigate } }) => {
       <ResourceFooter
         selectMode={selectMode}
         selectedOptions={selectedOptions}
+        downloadFiles={triggerDownload}
       />
     </>
   )

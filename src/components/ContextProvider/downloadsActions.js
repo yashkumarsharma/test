@@ -81,5 +81,7 @@ export const downloadVideo = async (entryId, setStatus, dispatch) => {
         await AsyncStorage.setItem(entryId, res.path())
         setStatus(downloadsStatus.DONE)
       })
+  } else {
+    setStatus(downloadsStatus.DONE)
   }
 }
