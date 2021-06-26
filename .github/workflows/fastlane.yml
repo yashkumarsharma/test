@@ -3,10 +3,8 @@ name: Continuous Integration
 #   pull_request:
 #     branches:
 #       - main
-
 - name: Checkout
   uses: actions/checkout@v2
-
 - name: Cache dependencies
   uses: actions/cache@v2
   with:
@@ -15,7 +13,6 @@ name: Continuous Integration
     restore-keys: npm-
   run: |
     npm install
-
 - name: Fastlane Action
   # You may pin to the exact commit or the version.
   # uses: maierj/fastlane-action@2121d31315dd0054a407c2c24938ae1fa29b883d
