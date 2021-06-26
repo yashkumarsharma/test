@@ -12,18 +12,10 @@ jobs:
         run: |
           npm install
       - name: Build Android Release
-        uses: maierj/fastlane-action@v2.0.1
-        with:
-          # The lane that should be executed.
-          lane: prodBuild
-          # The relative path from the project root directory to the subdirectory where the fastlane folder is located.
-          subdirectory: ./android
-          # The directory where Ruby gems should be installed to and cached. If a relative path is specified, it's applied relative to the location of the Gemfile, which is either the project root or the directory from the `subdirectory` parameter.
-          bundle-install-path: ./android
-          # The action tracks usage in Firebase by default. You can disable tracking by setting this parameter to 'true'.
-          skip-tracking: true
-          # The options that should be passed as arguments to the lane. The options should be serialized as a JSON object.
-          # options: # optional
+        # run: |
+        #   cd android && ./gradlew assembleRelease -PMYAPP_UPLOAD_STORE_PASSWORD='${{ secrets.KEYSTORE_PASSWORD }}' -PMYAPP_UPLOAD_KEY_PASSWORD='${{ secrets.KEYSTORE_PASSWORD }}'
+        run: |
+          cd android && ./gradlew assembleRelease
       - name: Upload Artifact
         uses: actions/upload-artifact@v1
         with:
