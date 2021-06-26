@@ -1,8 +1,4 @@
 name: Continuous Integration
-# on:
-#   pull_request:
-#     branches:
-#       - main
 - name: Checkout
   uses: actions/checkout@v2
 - name: Cache dependencies
