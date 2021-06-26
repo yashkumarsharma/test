@@ -29,7 +29,7 @@ jobs:
           path: android/app/build/outputs/apk/release/
   build-ios:
     needs: install
-    runs-on: macos
+    runs-on: macos-11
     steps:
       - uses: actions/checkout@v2
       - name: Install npm dependencies
