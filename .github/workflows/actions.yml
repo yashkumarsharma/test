@@ -16,15 +16,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Environement Variables
-        env:
-          API_HOST: ${{ secrets.API_HOST }}
-          AUTH0_CLIENT_ID: ${{ secrets.AUTH0_CLIENT_ID }}
-          AUTH0_DOMAIN: ${{ secrets.AUTH0_DOMAIN }}
       - name: Install npm dependencies
         run: |
           npm install
       - name: Build Android Release
+        env:
+          API_HOST: ${{ secrets.API_HOST }}
+          AUTH0_CLIENT_ID: ${{ secrets.AUTH0_CLIENT_ID }}
+          AUTH0_DOMAIN: ${{ secrets.AUTH0_DOMAIN }}
         run: |
           cd android && ./gradlew assembleRelease
       - name: Upload Artifact
