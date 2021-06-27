@@ -18,7 +18,7 @@ jobs:
       - uses: actions/checkout@v2
       - name: Make envfile
         run: |
-          cat <<EOT >> .env
+          cat <<EOT >> ./.env
           API_HOST: ${{ secrets.API_HOST }}
           AUTH0_CLIENT_ID: ${{ secrets.AUTH0_CLIENT_ID }}
           AUTH0_DOMAIN: ${{ secrets.AUTH0_DOMAIN }}
