@@ -1,0 +1,10 @@
+language: node_js
+node_js:
+  - 16
+before_install:
+  - npm i -g npm@latest
+cache: npm
+install:
+  - bundle install
+script:
+  - fastlane android beta
