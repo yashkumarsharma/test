@@ -1,9 +1,12 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import PropTypes from 'prop-types'
 import { Text, StyleSheet, View, Image, Pressable } from 'react-native'
 import { latoFont, getPrettySize } from '../../utilities/utilsFunctions'
 import RemoveFile from '../../assets/icons/RemoveFileBrand.png'
 import DownloadFile from '../../assets/icons/FileDownloadBrand.png'
+import { AppContext } from '../ContextProvider/ContextProvider'
+import DownloadCancel from '../../assets/icons/DownloadCancel.svg'
+import CircularProgress from '../CircularProgress/CircularProgress'
 
 function ResourceFooter({
   selectMode,
@@ -12,6 +15,7 @@ function ResourceFooter({
   removeFiles,
   selectedSize = 0,
 }) {
+  const { downloadQueue, currentDownload } = useContext(AppContext)
   if (selectedOptions?.length > 0) {
     return (
       <View style={styles.selectedContainer}>
@@ -26,6 +30,22 @@ function ResourceFooter({
             source={selectMode === 'remove' ? RemoveFile : DownloadFile}
             style={{ height: 24 }}
           />
+        </Pressable>
+      </View>
+    )
+  } else if (downloadQueue?.length > 0) {
+    return (
+      <View style={styles.selectedContainer}>
+        <Text style={styles.selectedText}>
+          Downloading: {getPrettySize(selectedSize)}
+        </Text>
+        <Pressable
+          onPress={() =>
+            selectMode === 'remove' ? removeFiles() : downloadFiles()
+          }>
+          <DownloadCancel source={DownloadFile} style={{ height: 24 }} />
+
+          <CircularProgress progress={currentDownload.progress} />
         </Pressable>
       </View>
     )

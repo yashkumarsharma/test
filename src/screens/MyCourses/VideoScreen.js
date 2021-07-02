@@ -52,9 +52,9 @@ const VideoScreen = ({ route }) => {
         ) : (
           <VideoPlayer videoFile={videoFile} />
         )}
-        {Platform.OS === 'ios' && (
-          <Text style={styles.videoDuration}>{video?.duration}</Text>
-        )}
+        {/* {Platform.OS === 'ios' && ( */}
+        {/*  <Text style={styles.videoDuration}>{video?.duration}</Text> */}
+        {/* )} */}
       </View>
       {video?.course_download?.map((resource) => (
         <Pressable

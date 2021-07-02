@@ -57,13 +57,11 @@ const Math = ({ navigation: { goBack } }) => {
         <View style={styles.titleContainer}>
           <View style={styles.titleContainerRow}>
             <View style={styles.titleContainerRow}>
-              {!isConnected
-                ? (
+              {!isConnected ? (
                 <Icon name={'lan-disconnect'} size={20} color={'#B1BFC5'} />
-                  )
-                : (
+              ) : (
                 <Icon name={'lan-connect'} size={20} color={colors.link} />
-                  )}
+              )}
               <Text style={styles.titleText}> {title} </Text>
             </View>
             <EntypoIcon

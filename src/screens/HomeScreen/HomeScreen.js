@@ -21,8 +21,10 @@ import { AppContext } from '../../components/ContextProvider/ContextProvider'
 const Tab = createBottomTabNavigator()
 const IconStyle = { height: 24, width: 24 }
 
-function HomeScreen () {
-  const { courses: { data } } = useContext(AppContext)
+function HomeScreen() {
+  const {
+    courses: { data },
+  } = useContext(AppContext)
   const showMath = useMemo(() => showMathTab(data), [data?.length])
   return (
     <Tab.Navigator
@@ -71,15 +73,17 @@ function HomeScreen () {
           ),
         }}
       />
-      {showMath && <Tab.Screen
-        name="Math"
-        component={MathScreen}
-        options={{
-          tabBarLabel: 'Math entry',
-          tabBarIcon: () => <Image style={IconStyle} source={MathActive} />,
-          tabBarVisible: false,
-        }}
-      />}
+      {showMath && (
+        <Tab.Screen
+          name='Math'
+          component={MathScreen}
+          options={{
+            tabBarLabel: 'Math entry',
+            tabBarIcon: () => <Image style={IconStyle} source={MathActive} />,
+            tabBarVisible: false,
+          }}
+        />
+      )}
       <Tab.Screen
         name='Options'
         component={OptionsScreen}

@@ -18,7 +18,10 @@ import config from '../../config'
 import { AppContext } from '../../components/ContextProvider/ContextProvider'
 
 const MyCoursesScreen = ({ navigation: { navigate } }) => {
-  const { courses: { loading, data: courses }, getCourses } = useContext(AppContext)
+  const {
+    courses: { loading, data: courses },
+    getCourses,
+  } = useContext(AppContext)
   const { getCourseImage } = config
   return (
     <ScrollView
@@ -32,8 +35,7 @@ const MyCoursesScreen = ({ navigation: { navigate } }) => {
           colors={[colors.brand]}
         />
       }>
-      {!courses?.length > 0
-        ? (
+      {!courses?.length > 0 ? (
         <View style={{ justifyContent: 'center', flexGrow: 1 }}>
           <ActivityIndicator color={colors.brand} />
         </View>

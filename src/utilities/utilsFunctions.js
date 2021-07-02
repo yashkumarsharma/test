@@ -42,3 +42,8 @@ export const getPrettySize = (number) => {
 export const arrayDiff = (arr1, arr2 = []) => {
   return arr1.filter((x) => !arr2.includes(x))
 }
+
+export const isSameArrays = (arr1, arr2) => {
+  if ((!arr1, !arr2)) return false
+  return JSON.stringify(arr1.sort()) === JSON.stringify(arr2.sort())
+}

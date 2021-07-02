@@ -17,11 +17,7 @@ import colors from '../../assets/colors'
 import { latoFont, getPrettySize } from '../../utilities/utilsFunctions'
 
 const OptionsScreen = () => {
-  const {
-    onSignOut,
-    downloads,
-    deleteDownloadsData,
-  } = useContext(AppContext)
+  const { onSignOut, downloads, deleteDownloadsData } = useContext(AppContext)
   const [dialogVisible, setDialogVisible] = useState(false)
   const [dialogMessage, setDialogMessage] = useState('')
   const [dialogAction, setDialogAction] = useState()
@@ -53,7 +49,12 @@ const OptionsScreen = () => {
       <View style={[styles.row, styles.downloadRow]}>
         <Text style={styles.rowText}>{size} Downloaded</Text>
         {downloadedBytes > 0 && (
-          <Icon onPress={onDeleteDownload} name={'delete-outline'} size={20} color={colors.link} />
+          <Icon
+            onPress={onDeleteDownload}
+            name={'delete-outline'}
+            size={20}
+            color={colors.link}
+          />
         )}
       </View>
     )

@@ -23,12 +23,9 @@ import { useSelect } from '../../hooks/useSelect'
 const Courses = ({ navigation: { navigate } }) => {
   const [selectMode, setSelectMode] = useState('')
   const { selectedOptions, reset, add, remove, isSelected } = useSelect([])
-  const {
-    downloads = {},
-    removeCourseFromDownloads,
-  } = useContext(AppContext)
+  const { downloads = {}, removeCourseFromDownloads } = useContext(AppContext)
 
-  const courses = Object.keys(downloads).map(courseId => ({
+  const courses = Object.keys(downloads).map((courseId) => ({
     id: courseId,
     title: downloads[courseId].title,
   }))
@@ -44,16 +41,15 @@ const Courses = ({ navigation: { navigate } }) => {
   if (courses.length === 0) {
     return (
       <View style={styles.blankContainer}>
-        <Text style={styles.emptyText}> Downloaded resources will be visible here </Text>
+        <Text style={styles.emptyText}>
+          Downloaded resources will be visible here
+        </Text>
       </View>
     )
   }
 
   const removeSelectedCourses = () => {
-    // Todo: Delete local files
-
-    // Remove from context
-    removeCourseFromDownloads(selectedOptions)
+    removeCourseFromDownloads(selectedOptions, getVideosList())
     reset()
   }
 
@@ -67,12 +63,34 @@ const Courses = ({ navigation: { navigate } }) => {
     selectedSize += downloads[selectedOptions[i]]?.size || 0
   }
 
+  const getVideosList = () => {
+    let videosList = []
+    selectedOptions.forEach((selectedCourse) => {
+      Object.keys(downloads[selectedCourse]?.chapters)?.forEach(
+        (selectedChapter) => {
+          Object.keys(
+            downloads[selectedCourse]?.chapters?.[selectedChapter]?.sections,
+          )?.forEach((selectedSection) => {
+            videosList = [
+              ...videosList,
+              ...Object.keys(
+                downloads[selectedCourse]?.chapters?.[selectedChapter]
+                  ?.sections[selectedSection]?.videos,
+              ),
+            ]
+          })
+        },
+      )
+    })
+
+    return videosList
+  }
+
   return (
     <>
       <ScrollView
         style={styles.scrollContainer}
-        contentContainerStyle={styles.scrollContent}
-      >
+        contentContainerStyle={styles.scrollContent}>
         <View style={styles.titleContainer}>
           <ResourceHeader
             selectMode={selectMode}
@@ -98,16 +116,13 @@ const Courses = ({ navigation: { navigate } }) => {
                   navigate('downloads-folders', {
                     course,
                   })
-                }}
-              >
+                }}>
                 <View style={styles.iconContainer}>
                   <Icon height={48} width={48} />
                   {!!selectMode && (
                     <CheckBox
                       onClick={() => {
-                        selected
-                          ? remove(course.id)
-                          : add(course.id)
+                        selected ? remove(course.id) : add(course.id)
                       }}
                       isChecked={selected}
                       checkBoxColor={colors.brand}
@@ -115,19 +130,15 @@ const Courses = ({ navigation: { navigate } }) => {
                   )}
                 </View>
                 <View>
-                  <Text
-                    style={styles.courseName}
-                    numberOfLines={2}
-                  >
+                  <Text style={styles.courseName} numberOfLines={2}>
                     {course.title}
                   </Text>
                   <View style={styles.downloadContainer}>
                     <Image source={Download} style={styles.downloadImage} />
-                    <Text style={styles.downloadText}>{getPrettySize(downloads[course.id]?.size || 0)}</Text>
-                    <Image
-                      source={Vector}
-                      style={styles.icon}
-                    />
+                    <Text style={styles.downloadText}>
+                      {getPrettySize(downloads[course.id]?.size || 0)}
+                    </Text>
+                    <Image source={Vector} style={styles.icon} />
                   </View>
                 </View>
               </TouchableOpacity>

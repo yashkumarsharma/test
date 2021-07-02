@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import AsyncStorage from '@react-native-community/async-storage'
 import merge from 'lodash/merge'
 import omit from 'lodash/omit'
+import isEmpty from 'lodash/isEmpty'
 import { downloadsStatus } from '../../constants'
 import { arrayDiff } from '../../utilities/utilsFunctions'
 import { loadUser, getCourses, setUser, onSignOut } from './userActions'
@@ -108,21 +109,38 @@ const ContextProvider = ({ children }) => {
     await AsyncStorage.setItem('downloads', JSON.stringify({}))
   }
 
-  const removeCourseFromDownloads = async (selectedCourses) => {
+  const removeCourseFromDownloads = async (selectedCourses, videoList) => {
     const data = omit(state.downloads, selectedCourses)
 
     dispatch({ type: 'SET_DOWNLOADS_DATA', data })
     await AsyncStorage.setItem('downloads', JSON.stringify(data))
+
+    removeFromDownloadQueue(videoList)
+
+    await AsyncStorage.multiRemove(videoList)
   }
 
-  const removeChaptersFromDownloads = async (courseId, selectedChapters) => {
+  const removeChaptersFromDownloads = async (
+    courseId,
+    selectedChapters,
+    videoList,
+  ) => {
     const downloads = { ...state.downloads }
     const chaptersData = omit(downloads[courseId].chapters, selectedChapters)
-    downloads[courseId].chapters = chaptersData
-    const data = updateDownloadsSize(downloads)
 
-    dispatch({ type: 'SET_DOWNLOADS_DATA', data })
-    await AsyncStorage.setItem('downloads', JSON.stringify(data))
+    if (isEmpty(chaptersData)) {
+      removeCourseFromDownloads([courseId])
+    } else {
+      downloads[courseId].chapters = chaptersData
+      const data = updateDownloadsSize(downloads)
+
+      dispatch({ type: 'SET_DOWNLOADS_DATA', data })
+      await AsyncStorage.setItem('downloads', JSON.stringify(data))
+
+      removeFromDownloadQueue(videoList)
+
+      await AsyncStorage.multiRemove(videoList)
+    }
   }
 
   const removeSectionsFromDownloads = async (
@@ -136,16 +154,19 @@ const ContextProvider = ({ children }) => {
       downloads[courseId].chapters[chapterId].sections,
       selectedSections,
     )
-    downloads[courseId].chapters[chapterId].sections = sectionsData
-    const data = updateDownloadsSize(downloads)
 
-    dispatch({ type: 'SET_DOWNLOADS_DATA', data })
-    await AsyncStorage.setItem('downloads', JSON.stringify(data))
+    if (isEmpty(sectionsData)) {
+      removeChaptersFromDownloads(courseId, [chapterId], videoList)
+    } else {
+      downloads[courseId].chapters[chapterId].sections = sectionsData
+      const data = updateDownloadsSize(downloads)
 
-    removeFromDownloadQueue(videoList)
+      dispatch({ type: 'SET_DOWNLOADS_DATA', data })
+      await AsyncStorage.setItem('downloads', JSON.stringify(data))
 
-    for (let i = 0; i < videoList.length; i++) {
-      await AsyncStorage.removeItem(videoList[i])
+      removeFromDownloadQueue(videoList)
+
+      await AsyncStorage.multiRemove(videoList)
     }
   }
 

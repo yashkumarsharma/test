@@ -44,7 +44,8 @@ const Sections = (props) => {
     currentDownload,
   } = useContext(AppContext)
 
-  const sections = downloads?.[courseUUID]?.chapters?.[chapterId].sections || {}
+  const sections =
+    downloads?.[courseUUID]?.chapters?.[chapterId]?.sections || {}
   const sectionIds = Object.keys(sections)
   const chapterName =
     downloads?.[courseUUID]?.chapters?.[chapterId]?.title || ''
@@ -76,7 +77,7 @@ const Sections = (props) => {
       selectedOptions,
       getVideosList(),
     )
-    // reset()
+    reset()
   }
 
   const getVideosList = () => {

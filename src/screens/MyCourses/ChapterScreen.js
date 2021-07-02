@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from 'react'
+import React, { useEffect, useState, useContext, useMemo } from 'react'
 import {
   View,
   Text,
@@ -15,7 +15,7 @@ import FastImage from 'react-native-fast-image'
 import AsyncStorage from '@react-native-community/async-storage'
 import { loadSectionData } from '../../utilities/api'
 import colors from '../../assets/colors'
-import { latoFont } from '../../utilities/utilsFunctions'
+import { isSameArrays, latoFont } from '../../utilities/utilsFunctions'
 import ModalComponent from '../../components/ModalComponent/ModalComponent'
 import { useSelect } from '../../hooks/useSelect'
 import ResourceHeader from '../../components/ResourceHeader/ResourceHeader'
@@ -59,7 +59,30 @@ const ChapterScreen = ({ route, navigation: { navigate } }) => {
     setSections(data)
   }
 
-  const isAllSelected = sections?.length === selectedOptions.length
+  const selectableSections = useMemo(() => {
+    let selectedSections = []
+
+    sections.forEach((section) => {
+      const isDownloaded =
+        downloads?.[courseUUID]?.chapters?.[chapter.chapter_uuid]?.sections?.[
+          section?.section_uuid
+        ]?.fullDownload
+
+      const isRemovable = selectMode === 'remove' && isDownloaded
+      const isDownlodable = selectMode === 'download' && !isDownloaded
+
+      if (isRemovable || isDownlodable) {
+        selectedSections = selectedSections.concat(section?.section_uuid)
+      }
+    })
+
+    return selectedSections
+  }, [sections, selectMode])
+
+  const isAllSelected =
+    selectableSections?.length > 0
+      ? selectedOptions.length === selectableSections?.length
+      : false
 
   useEffect(() => {
     getChapterData()
@@ -114,7 +137,6 @@ const ChapterScreen = ({ route, navigation: { navigate } }) => {
     const chapter = route?.params?.chapter || {}
     const chapterTitle = `Chapter ${index + 1}: ${chapter.title || ''}`
 
-    console.log(video, '----', courseTitle, '----')
     if (!video) {
       // const sectionTitle = `${index + 1}.${secIndex + 1}: ${section.title || ''}`
       // The structure is kept generic and it is required for Downloads functionality.
@@ -128,6 +150,7 @@ const ChapterScreen = ({ route, navigation: { navigate } }) => {
           sectionsList[selectedOptions[i]] = {
             title: `${index + 1}.${i + 1}: ${sections[i].title || ''}`,
             videos: {},
+            fullDownload: true,
           }
 
           const videos =
@@ -156,12 +179,6 @@ const ChapterScreen = ({ route, navigation: { navigate } }) => {
           },
         },
       }
-      console.log(
-        downloadsObject,
-        '-------object-----',
-        getVideosList(),
-        '-------list-------',
-      )
       addDownloadsData(downloadsObject, getVideosList())
 
       reset()
@@ -173,6 +190,30 @@ const ChapterScreen = ({ route, navigation: { navigate } }) => {
       const sectionTitle = `${index + 1}.${secIndex + 1}: ${
         section.title || ''
       }`
+
+      const downloadedVideos =
+        downloads?.[courseUUID]?.chapters?.[chapter?.chapter_uuid]?.sections?.[
+          section?.section_uuid
+        ]?.videos
+
+      let isDownloaded = false
+
+      if (downloadedVideos) {
+        const videos =
+          sections[secIndex]?.section_exe?.multi_lecture_videos?.videos ||
+          sections[secIndex]?.section_exe?.lecture?.lecturevideos
+
+        isDownloaded = isSameArrays(
+          [
+            ...Object.keys(downloadedVideos),
+            video.kaltura_embed_code || video.kalturaEmbedCode,
+          ],
+          videos?.map(
+            (vid) => vid?.kaltura_embed_code || vid?.kalturaEmbedCode,
+          ),
+        )
+      }
+
       // The structure is kept generic and it is required for Downloads functionality.
       // It supports multiple chapters/sections/videos.
       // They can be updated in a single call.
@@ -193,6 +234,7 @@ const ChapterScreen = ({ route, navigation: { navigate } }) => {
                       size: 456000, // size in Bytes // Dummy value for now
                     },
                   },
+                  fullDownload: isDownloaded,
                 },
               },
             },
@@ -231,6 +273,11 @@ const ChapterScreen = ({ route, navigation: { navigate } }) => {
     return { Icon: Play, status: 'DOWNLOADED' }
   }
 
+  let selectedSize = 0
+  for (let i = 0; i < selectedOptions.length; i++) {
+    selectedSize += sections[selectedOptions[i]]?.size || 450000
+  }
+
   return (
     <>
       <ScrollView
@@ -261,12 +308,13 @@ const ChapterScreen = ({ route, navigation: { navigate } }) => {
 
               const selected = isSelected(section?.section_uuid)
               const isOpen = displayedSections[secIndex]
-              const isDownloaded = Boolean(
+              const isDownloaded =
                 downloads?.[courseUUID]?.chapters?.[chapter.chapter_uuid]
-                  ?.sections?.[section?.section_uuid],
+                  ?.sections?.[section?.section_uuid]?.fullDownload
+
+              const isSelectable = selectableSections.includes(
+                section?.section_uuid,
               )
-              const isRemovable = selectMode === 'remove' && isDownloaded
-              const isDownlodable = selectMode === 'download' && !isDownloaded
 
               return (
                 <View
@@ -301,7 +349,7 @@ const ChapterScreen = ({ route, navigation: { navigate } }) => {
                         22 MB
                       </Text>
                     </View>
-                    {isRemovable || isDownlodable ? (
+                    {isSelectable ? (
                       <CheckBox
                         onClick={() => {
                           selected
@@ -428,6 +476,7 @@ const ChapterScreen = ({ route, navigation: { navigate } }) => {
         selectedOptions={selectedOptions}
         downloadFiles={triggerDownload}
         removeFiles={removeSelectedSections}
+        selectedSize={selectedSize}
       />
     </>
   )

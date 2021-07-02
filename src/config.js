@@ -11,21 +11,27 @@ export default {
   getCourseIcon,
 }
 
-function getCourseIcon (courseId) {
+function getCourseIcon(courseId) {
   const courseName = courseIdToName(courseId)
   switch (courseName) {
-    case 'psychology': return PsychologyIcon
-    case 'statistics': return StatisticsIcon
-    case 'astronomy': return AstronomyIcon
-    case 'philosophy': return PhilosophyIcon
-    case 'microeconomics': return MicroeconomicsIcon
+    case 'psychology':
+      return PsychologyIcon
+    case 'statistics':
+      return StatisticsIcon
+    case 'astronomy':
+      return AstronomyIcon
+    case 'philosophy':
+      return PhilosophyIcon
+    case 'microeconomics':
+      return MicroeconomicsIcon
     case 'calculus':
     case 'y.calculus':
-    default: return CalculusIcon
+    default:
+      return CalculusIcon
   }
 }
 
-function getCourseImage (courseId) {
+function getCourseImage(courseId) {
   const courseName = courseIdToName(courseId)
   return {
     test: require('./assets/images/calculus.png'),
@@ -39,7 +45,7 @@ function getCourseImage (courseId) {
   }[courseName]
 }
 
-function getCourseIds () {
+function getCourseIds() {
   return {
     test: 'test-course',
     calculus: 'b227c462-332c-40e0-8735-ea3af6f11661',
@@ -52,11 +58,11 @@ function getCourseIds () {
   }
 }
 
-function courseIdToName (id) {
+function courseIdToName(id) {
   return invert(getCourseIds())[id]
 }
 
-function invert (obj) {
+function invert(obj) {
   const inverted = {}
   Object.keys(obj).forEach(function (k) {
     const v = obj[k]

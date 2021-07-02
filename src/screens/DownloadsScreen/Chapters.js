@@ -22,10 +22,7 @@ import { latoFont, getPrettySize } from '../../utilities/utilsFunctions'
 const Chapters = (props) => {
   const course = props?.route?.params?.course
   const navigate = props?.navigation?.navigate
-  const {
-    downloads = {},
-    removeChaptersFromDownloads,
-  } = useContext(AppContext)
+  const { downloads = {}, removeChaptersFromDownloads } = useContext(AppContext)
   const { selectedOptions, reset, add, remove, isSelected } = useSelect([])
   const [selectMode, setSelectMode] = useState('')
   const chapters = downloads?.[course.id]?.chapters || {}
@@ -44,11 +41,26 @@ const Chapters = (props) => {
   }
 
   const removeSelectedChapters = () => {
-    // Todo: Delete local files
-
     // Remove from context
-    removeChaptersFromDownloads(course.id, selectedOptions)
+    removeChaptersFromDownloads(course.id, selectedOptions, getVideosList())
     reset()
+  }
+
+  const getVideosList = () => {
+    let videosList = []
+    selectedOptions.forEach((selectedChapter) => {
+      Object.keys(chapters[selectedChapter]?.sections)?.forEach(
+        (selectedSection) => {
+          videosList = [
+            ...videosList,
+            ...Object.keys(
+              chapters[selectedChapter]?.sections[selectedSection]?.videos,
+            ),
+          ]
+        },
+      )
+    })
+    return videosList
   }
 
   let selectedSize = 0
@@ -61,72 +73,63 @@ const Chapters = (props) => {
       <ScrollView
         style={styles.scrollContainer}
         contentContainerStyle={styles.scrollContent}>
-        {!chapterIds?.length > 0
-          ? (
-            <View style={{ justifyContent: 'center', flexGrow: 1 }}>
-              <Text style={styles.emptyText}> No Chapters Found </Text>
-            </View>
-            )
-          : (
-            <View style={styles.container}>
-              <ResourceHeader
-                selectMode={selectMode}
-                isAllSelected={isAllSelected}
-                title={courseName}
-                onPress={headerButtonPress}
-                checkboxPress={checkboxPress}
-              />
-              {Object.keys(chapters).map(chapterUUID => {
-                const selected = isSelected(chapterUUID)
+        {!chapterIds?.length > 0 ? (
+          <View style={{ justifyContent: 'center', flexGrow: 1 }}>
+            <Text style={styles.emptyText}> No Chapters Found </Text>
+          </View>
+        ) : (
+          <View style={styles.container}>
+            <ResourceHeader
+              selectMode={selectMode}
+              isAllSelected={isAllSelected}
+              title={courseName}
+              onPress={headerButtonPress}
+              checkboxPress={checkboxPress}
+            />
+            {Object.keys(chapters).map((chapterUUID) => {
+              const selected = isSelected(chapterUUID)
 
-                return (
-                  <TouchableOpacity
-                    style={styles.chapterCard}
-                    key={chapterUUID}
-                    onPress={() => {
-                      if (!selectMode) {
-                        navigate('downloads-chapters', {
-                          course,
-                          chapter: chapterUUID,
-                        })
-                      } else {
-                        selected ? remove(chapterUUID) : add(chapterUUID)
-                      }
-                    }}>
-                    <View style={{ paddingRight: 12, flex: 1 }}>
-                      <Text
-                        style={styles.title}
-                        numberOfLines={2}
-                      >
-                        {chapters[chapterUUID]?.title}
-                      </Text>
-                      <View style={styles.downloadContainer}>
-                        <Image source={Download} style={styles.downloadImage} />
-                        <Text style={styles.downloadText}>{getPrettySize(chapters[chapterUUID]?.size)}</Text>
-                      </View>
-                    </View>
-                    {selectMode
-                      ? (
-                        <CheckBox
-                          onClick={() => {
-                            selected ? remove(chapterUUID) : add(chapterUUID)
-                          }}
-                          isChecked={selected}
-                          checkBoxColor={colors.brand}
-                        />
-                        )
-                      : (
-                        <Image
-                          source={Vector}
-                          style={styles.icon}
-                        />
-                        )
+              return (
+                <TouchableOpacity
+                  style={styles.chapterCard}
+                  key={chapterUUID}
+                  onPress={() => {
+                    if (!selectMode) {
+                      navigate('downloads-chapters', {
+                        course,
+                        chapter: chapterUUID,
+                      })
+                    } else {
+                      selected ? remove(chapterUUID) : add(chapterUUID)
                     }
-                  </TouchableOpacity>
-                )
-              })}
-              </View>
-            )}
+                  }}>
+                  <View style={{ paddingRight: 12, flex: 1 }}>
+                    <Text style={styles.title} numberOfLines={2}>
+                      {chapters[chapterUUID]?.title}
+                    </Text>
+                    <View style={styles.downloadContainer}>
+                      <Image source={Download} style={styles.downloadImage} />
+                      <Text style={styles.downloadText}>
+                        {getPrettySize(chapters[chapterUUID]?.size)}
+                      </Text>
+                    </View>
+                  </View>
+                  {selectMode ? (
+                    <CheckBox
+                      onClick={() => {
+                        selected ? remove(chapterUUID) : add(chapterUUID)
+                      }}
+                      isChecked={selected}
+                      checkBoxColor={colors.brand}
+                    />
+                  ) : (
+                    <Image source={Vector} style={styles.icon} />
+                  )}
+                </TouchableOpacity>
+              )
+            })}
+          </View>
+        )}
       </ScrollView>
       <ResourceFooter
         selectMode={selectMode}
