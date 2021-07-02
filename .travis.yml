@@ -6,6 +6,7 @@ cache: npm
 install:
   - bundle install
   - npm install
+  - yes | ~/Android/Sdk/tools/bin/sdkmanager --licenses
 android:
   components:
     # Uncomment the lines below if you want to
