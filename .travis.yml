@@ -31,3 +31,11 @@ android:
     # - sys-img-armeabi-v7a-android-17
 script:
   - fastlane android beta
+deploy:
+  provider: releases
+  api_key: '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'
+  file_glob: true
+  file: android/app/build/outputs/apk/release/*
+  skip_cleanup: true
+  on:
+    tags: true
