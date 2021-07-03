@@ -5,6 +5,7 @@ import {
   Linking,
   Platform,
   Pressable,
+  ScrollView,
   StyleSheet,
   Text,
   TextInput,
@@ -13,6 +14,7 @@ import {
 import AsyncStorage from '@react-native-community/async-storage'
 import Icon from 'react-native-vector-icons/Feather'
 import Toast from 'react-native-simple-toast'
+import Config from 'react-native-config'
 
 import { AppContext } from '../../components/ContextProvider/ContextProvider'
 import { login } from '../../utilities/api'
@@ -58,7 +60,7 @@ const LoginScreen = () => {
   }
 
   return (
-    <View style={styles.wrapper}>
+    <ScrollView>
       <Pressable onPress={() => Linking.openURL('https://www.outlier.org/')}>
         <Image
           onPress={() => Linking.openURL('https://www.outlier.org/')}
@@ -69,6 +71,7 @@ const LoginScreen = () => {
       </Pressable>
       <Text style={styles.description}> Companion App </Text>
       <Text style={styles.helperText}> Log in to continue to Outlier. </Text>
+      <Text style={styles.helperText}> {JSON.stringify(Config)} </Text>
       <View style={styles.inputSection}>
         <TextInput
           style={styles.input}
@@ -130,7 +133,7 @@ const LoginScreen = () => {
           Privacy Policy
         </Text>
       </View>
-    </View>
+    </ScrollView>
   )
 }
 
