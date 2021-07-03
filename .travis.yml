@@ -1,0 +1,29 @@
+language: android
+before_install:
+  - nvm install 16
+  - node --version
+cache: npm
+install:
+  - bundle install
+  - npm install
+  # Todo: fetch these values from travis environment
+  - echo API_HOST=https://api.outlier.org >> .env
+  - echo AUTH0_CLIENT_ID=YglNLrKtTjW0CQvax9bUqhDJD0N5rIEZ >> .env
+  - echo AUTH0_DOMAIN=outlier.auth0.com >> .env
+  - yes | /usr/local/android-sdk/tools/bin/sdkmanager "build-tools;29.0.2"
+android:
+  components:
+    - tools
+    - platform-tools
+    - build-tools-29.0.2
+    - android-29
+script:
+  - fastlane android beta
+deploy:
+  provider: releases
+  api_key: ${GITHUB_TOKEN}
+  file_glob: true
+  file: android/app/build/outputs/apk/release/*
+  skip_cleanup: true
+  on:
+    branch: main
