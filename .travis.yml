@@ -1,6 +1,9 @@
 os:
   - linux
   - osx
+language:
+  - android
+  - objective-c
 before_install:
   - nvm install 16
   - node --version
@@ -26,6 +29,7 @@ jobs:
       script:
         - fastlane android beta
     - os: osx
+      langugage: objective-c
       script:
         - echo "from osx"
 deploy:
