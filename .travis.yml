@@ -1,7 +1,6 @@
 os:
   - linux
   - osx
-language: android
 before_install:
   - nvm install 16
   - node --version
