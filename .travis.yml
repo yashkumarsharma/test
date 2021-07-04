@@ -29,7 +29,7 @@ jobs:
       script:
         - fastlane android beta
     - os: osx
-      langugage: objective-c
+      language: objective-c
       script:
         - echo "from osx"
 deploy:
