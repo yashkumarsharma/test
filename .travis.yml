@@ -15,7 +15,7 @@ install:
   - echo API_HOST=https://api.outlier.org >> .env
   - echo AUTH0_CLIENT_ID=YglNLrKtTjW0CQvax9bUqhDJD0N5rIEZ >> .env
   - echo AUTH0_DOMAIN=outlier.auth0.com >> .env
-  - yes | /usr/local/android-sdk/tools/bin/sdkmanager "build-tools;29.0.2"
+  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then yes | /usr/local/android-sdk/tools/bin/sdkmanager "build-tools;29.0.2"; fi
 android:
   components:
     - tools
