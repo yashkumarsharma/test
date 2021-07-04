@@ -1,3 +1,6 @@
+os:
+  - linux
+  - osx
 language: android
 before_install:
   - nvm install 16
@@ -20,8 +23,12 @@ android:
 jobs:
   include:
     - language: android
+      os: linux
       script:
         - fastlane android beta
+    - os: osx
+      script:
+        - echo "from osx"
 deploy:
   provider: releases
   api_key: ${GITHUB_TOKEN}
