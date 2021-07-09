@@ -34,7 +34,8 @@ platform :android do
   desc 'Build the Android application.'
   private_lane :build do
     gradle(task: 'clean', project_dir: 'android/')
-    gradle(task: 'assemble', build_type: 'Release', project_dir: 'android/')
+    increment_version_code
+    gradle(task: 'assemble', flavor: 'prod', build_type: 'Release', project_dir: 'android/')
   end
 
   desc 'Ship to Playstore Beta.'

@@ -11,6 +11,7 @@ import {
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import AntIcon from 'react-native-vector-icons/AntDesign'
 import { ConfirmDialog } from 'react-native-simple-dialogs'
+import DeviceInfo from 'react-native-device-info'
 
 import { AppContext } from '../../components/ContextProvider/ContextProvider'
 import colors from '../../assets/colors'
@@ -22,6 +23,8 @@ const OptionsScreen = () => {
     downloads,
     deleteDownloadsData,
   } = useContext(AppContext)
+
+  console.log('Platform.version', DeviceInfo.getBuildNumber(), DeviceInfo.getVersion())
   const [dialogVisible, setDialogVisible] = useState(false)
   const [dialogMessage, setDialogMessage] = useState('')
   const [dialogAction, setDialogAction] = useState()
@@ -64,7 +67,7 @@ const OptionsScreen = () => {
     const isVersionUpdateAvailable = false
     return (
       <View style={[styles.row]}>
-        <Text style={styles.rowText}>Version 1.0.0</Text>
+        <Text style={styles.rowText}>Version 1.0.0 {`${DeviceInfo.getBuildNumber()} ${DeviceInfo.getVersion()}`}</Text>
         {isVersionUpdateAvailable && (
           <View style={{ flexDirection: 'row' }}>
             <Text style={styles.rowLinkText}>Update available</Text>
