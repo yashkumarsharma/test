@@ -30,10 +30,10 @@ jobs:
         # - fastlane ios beta
         - echo "Hello Travis"
 deploy:
-  # provider: releases
-  # api_key: ${GITHUB_TOKEN}
-  # file_glob: true
-  # file: android/app/build/outputs/apk/release/*
-  # skip_cleanup: true
-  # on:
-  #   branch: main
+  provider: releases
+  api_key: ${GITHUB_TOKEN}
+  file_glob: true
+  file: android/app/build/outputs/apk/prod/release/*
+  skip_cleanup: true
+  on:
+    branch: feat/flavor
