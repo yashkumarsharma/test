@@ -131,6 +131,25 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
+    flavorDimensions "default"
+
+    productFlavors {
+        dev {
+            // minSdkVersion rootProject.ext.minSdkVersion
+            applicationId "com.outliermobileapp.dev"
+            // targetSdkVersion rootProject.ext.targetSdkVersion
+            resValue "string", "build_config_package", "com.outliermobileapp"
+            resValue "string", "app_name", "Dev - Outlier"
+        }
+        prod {
+            // minSdkVersion rootProject.ext.minSdkVersion
+            applicationId "com.outliermobileapp"
+            // targetSdkVersion rootProject.ext.targetSdkVersion
+            // resValue "string", "build_config_package", "com.outliermobileapp"
+            resValue "string", "app_name", "Outlier"
+        }
+    }
+
     defaultConfig {
         applicationId "com.outliermobileapp"
         minSdkVersion rootProject.ext.minSdkVersion

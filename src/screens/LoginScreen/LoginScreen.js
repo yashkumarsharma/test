@@ -32,7 +32,7 @@ const LoginScreen = () => {
     Toast.show('Signing in')
     Keyboard.dismiss()
     const data = await login(username, password)
-    if (data.id_token) {
+    if (data?.id_token) {
       const user = {
         username,
         ...data,
@@ -40,7 +40,8 @@ const LoginScreen = () => {
       await AsyncStorage.setItem('user', JSON.stringify(user))
       setUser({ user })
     } else {
-      Toast.show('Wrong email or password.', Toast.LONG)
+      const message = data ? 'Wrong email or password.' : 'Network Error'
+      Toast.show(message, Toast.LONG)
     }
   }
 

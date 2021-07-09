@@ -3,7 +3,9 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "android": "react-native run-android",
+    "android:dev": "react-native run-android --variant=devDebug --appIdSuffix=dev",
+    "android:prod": "react-native run-android --variant=prodDebug",
+    "android:build": "cd android && ./gradlew assembleProdRelease",
     "android:beta": "fastlane android beta",
     "ios": "react-native run-ios",
     "start": "react-native start",
