@@ -1,0 +1,27 @@
+name: Version increment
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  job:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Version Control on PR merge
+        run: |
+          MESSAGE=$(git log -1 HEAD --pretty=format:%s)
+          SUBSTRING=$(echo $MESSAGE| cut -d':' -f 1)
+          if [[ "$SUBSTRING" == "fix" ]]; then npm version patch --no-git-tag-version; fi
+          if [[ "$SUBSTRING" == "feat" ]]; then npm version minor --no-git-tag-version; fi
+          if [ "$SUBSTRING" == "fix" ] || [ "$SUBSTRING" == "feat" ]; then
+            git config --global user.email "githubaction@outlier.org"
+            git config --global user.name "Github Action"
+            npx json -I -f package-lock.json -e this.build++;
+            npx json -I -f package.json -e this.build++;
+            git commit -am 'build: version bump';
+            git push;
+          fi
+        shell: bash
