@@ -13,6 +13,6 @@ jobs:
         run: |
           pwd
           ls
-          # chmod +x "${GITHUB_WORKSPACE}/.github/script.sh"
-          # "${GITHUB_WORKSPACE}/.github/script.sh"
+          chmod +x "${GITHUB_WORKSPACE}/.github/script.sh"
+          "${GITHUB_WORKSPACE}/.github/script.sh"
         shell: bash
