@@ -10,4 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Version Control on PR merge
-        run: .github/workflows/read_commit.sh
+        run: |
+          chmod +x .github/workflows/read_commit.sh
+          ./public/scripts/test.sh
+        shell: bash
