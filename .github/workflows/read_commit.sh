@@ -4,15 +4,14 @@ MESSAGE=$(git log -1 HEAD --pretty=format:%s)
 
 
 
- 
   
 
-SUBSTRING="${MESSAGE:0:3}"  
+SUBSTRING=$(echo $MESSAGE| cut -d':' -f 1) 
 
 
 
 
-if [[ "$SUBSTRING" == fix ]]; then
+if [[ "$SUBSTRING" == "fix" ]]; then
          npm version patch
-if [[ "$SUBSTRING" == fea ]]; then
+if [[ "$SUBSTRING" == "feat" ]]; then
          npm version minor
