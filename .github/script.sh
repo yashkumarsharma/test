@@ -1,7 +1,8 @@
 #!/bin/bash
 
 MESSAGE=$(git log -1 HEAD --pretty=format:%s)
-INPUT = "fix:hello"
+echo $MESSAGE
+INPUT="fix:hello"
 
 SUBSTRING=$(echo $INPUT| cut -d':' -f 1) 
 
