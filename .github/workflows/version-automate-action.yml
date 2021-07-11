@@ -2,7 +2,7 @@ name: Version increment
 
 on:
   pull_request:
-    types: [closed]
+    types: [push]
 
 jobs:
   job_01:
@@ -12,6 +12,6 @@ jobs:
         run: |
           echo pwd
           echo ls
-          chmod +x "${GITHUB_WORKSPACE}/.github/script.sh"
-          "${GITHUB_WORKSPACE}/.github/script.sh"
+          # chmod +x "${GITHUB_WORKSPACE}/.github/script.sh"
+          # "${GITHUB_WORKSPACE}/.github/script.sh"
         shell: bash
