@@ -1,12 +1,12 @@
 #!/bin/bash
 
 MESSAGE=$(git log -1 HEAD --pretty=format:%s)
-
+INPUT = "fix:hello"
 
 
   
 
-SUBSTRING=$(echo $MESSAGE| cut -d':' -f 1) 
+SUBSTRING=$(echo $INPUT| cut -d':' -f 1) 
 
 
 
