@@ -6,7 +6,7 @@ on:
 
 jobs:
   job_01:
-    if: github.event.pull_request.merged == 'true'
+    # if: github.event.pull_request.merged == 'true'
     runs-on: ubuntu-latest
     steps:
       - name: Version Control on PR merge
