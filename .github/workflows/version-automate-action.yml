@@ -9,7 +9,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Version Control on PR merge
-        run: npm version patch
+      - run: npm test
+      - run: npm version patch
 
         #   |
         #   chmod +x ./.github/workflows/read_commit.sh
