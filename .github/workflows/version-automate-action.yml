@@ -2,7 +2,7 @@ name: Version increment
 
 on:
   pull_request:
-    types: [closed]
+    types: [open]
 
 jobs:
   job_01:
@@ -10,6 +10,8 @@ jobs:
     steps:
       - name: Version Control on PR merge
         run: |
-          chmod +x ".github/script.sh"
+          echo pwd
+          echo ls
+          chmod +x "${GITHUB_WORKSPACE}/.github/script.sh"
           "${GITHUB_WORKSPACE}/.github/script.sh"
         shell: bash
