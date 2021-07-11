@@ -10,8 +10,8 @@ jobs:
     steps:
       - name: Version Control on PR merge
         run: |
-          echo pwd
-          echo ls
+          pwd
+          ls
           # chmod +x "${GITHUB_WORKSPACE}/.github/script.sh"
           # "${GITHUB_WORKSPACE}/.github/script.sh"
         shell: bash
