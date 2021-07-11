@@ -5,12 +5,9 @@ on:
     types: [closed]
 
 jobs:
-  build:
+  job_01:
     if: github.event.pull_request.merged == 'true'
-
     runs-on: ubuntu-latest
-
     steps:
-      - uses: actions/checkout@v2
       - name: Version Control on PR merge
-        run: '.github/workflows/read_commit.sh'
+        run: .github/workflows/read_commit.sh
