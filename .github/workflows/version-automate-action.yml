@@ -2,7 +2,7 @@ name: Version increment
 
 on:
   pull_request:
-    types: [push]
+    types: [closed]
 
 jobs:
   job_01:
