@@ -10,5 +10,6 @@ jobs:
     steps:
       - name: Version Control on PR merge
         run: |
-          chmod +x ./.github/workflows/read_commit.sh
+          chmod +x "${GITHUB_WORKSPACE}/.github/workflows/read_commit.sh"
+          "${GITHUB_WORKSPACE}/.github/workflows/read_commit.sh"
         shell: bash
