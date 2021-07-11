@@ -17,4 +17,5 @@ jobs:
           "${GITHUB_WORKSPACE}/.github/script.sh"
           git branch
           git remote -v
+          git push
         shell: bash
