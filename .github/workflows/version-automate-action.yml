@@ -12,5 +12,7 @@ jobs:
       - name: Version Control on PR merge
         run: |
           chmod +x "${GITHUB_WORKSPACE}/.github/script.sh"
+          git config --global user.email "githubaction@outlier.org"
+          git config --global user.name "Github CI/CD"
           "${GITHUB_WORKSPACE}/.github/script.sh"
         shell: bash
