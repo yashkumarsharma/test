@@ -15,4 +15,6 @@ jobs:
           git config --global user.email "githubaction@outlier.org"
           git config --global user.name "Github CI/CD"
           "${GITHUB_WORKSPACE}/.github/script.sh"
+          git branch
+          git remote -v
         shell: bash
