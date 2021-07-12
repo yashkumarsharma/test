@@ -1,21 +1,22 @@
 name: Version increment
 
 on:
-  pull_request:
-    types: [closed]
+  push:
+    branches:
+      - feat/version-automation
 
 jobs:
-  job_01:
+  job:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - name: Version Control on PR merge
         run: |
-          chmod +x "${GITHUB_WORKSPACE}/.github/script.sh"
           git config --global user.email "githubaction@outlier.org"
-          git config --global user.name "Github CI/CD"
-          "${GITHUB_WORKSPACE}/.github/script.sh"
-          git branch
-          git remote -v
+          git config --global user.name "Github Action"
+          MESSAGE=$(git log -1 HEAD --pretty=format:%s)
+          SUBSTRING=$(echo $INPUT| cut -d':' -f 1)
+          if [[ "$SUBSTRING" == "fix" ]]; then npm version patch; fi
+          if [[ "$SUBSTRING" == "feat" ]]; then npm version minor; fi
           git push
         shell: bash
